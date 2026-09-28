@@ -148,6 +148,13 @@ void main() {
     );
 
     test('generated tokens are current', () {
+      // The design tokens live in the Kletso monorepo (packages/design). In a
+      // packages-only checkout (github.com/kletso/kletso) there is nothing to
+      // compare against, so the check is skipped there.
+      if (!File('../design/tokens.json').existsSync()) {
+        markTestSkipped('packages/design/tokens.json not in this checkout');
+        return;
+      }
       final result = Process.runSync('dart', [
         'run',
         'tool/gen_tokens.dart',

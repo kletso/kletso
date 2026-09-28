@@ -17,7 +17,7 @@ client.registerComponent('acme.productCard', (ctx, node) => ProductCard(name: no
 // in the tree: KletsoLauncher(), and KletsoNotificationHost(client: client, child: app)
 ```
 
-Documentation: https://kletso.ai/docs · Example app: [`example/acme_shop`](example/acme_shop)
+Documentation: https://kletso.ai/docs · Quickstart: https://kletso.ai/docs/start/quickstart
 
 ## Develop
 
@@ -25,7 +25,6 @@ Documentation: https://kletso.ai/docs · Example app: [`example/acme_shop`](exam
 flutter pub get            # pub workspace: resolves all packages together
 cd packages/kletso_core && dart test
 cd packages/kletso_flutter && flutter test
-cd example/acme_shop && flutter run -d chrome
 ```
 
 Licence: MIT.

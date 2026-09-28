@@ -6,4 +6,3 @@ workspace:
   - packages/kletso_ui_schema
   - packages/kletso_core
   - packages/kletso_flutter
-  - example/acme_shop
