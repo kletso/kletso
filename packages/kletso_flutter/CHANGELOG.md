@@ -1,4 +1,4 @@
-## 0.1.0 (unreleased)
+## 0.1.0 — 2026-09-29
 
 - `KletsoNotificationHost` (banner/toast/alert, `system` → `onSystemNotification` with banner fallback, `silent`), `KletsoUi.openNotification`, `notificationResults`, `KletsoActionOrigin.notification` (D58).
 - API review (D56): `KletsoFormat.duration` (was `kletsoDuration`), `runLocalAction` internal, `KletsoUi.isOpen` read-only, `onOpenUrl` getter, `KletsoBotBubble.agentName` removed.

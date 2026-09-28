@@ -1,4 +1,4 @@
-## 0.1.0 (unreleased)
+## 0.1.0 — 2026-09-29
 
 - Proactive notifications: `KletsoClient.notifications`, `KletsoNotification`, `registerPushToken`/`unregisterPushToken` (`KletsoPushToken`, `KletsoApi` + HTTP `PUT/DELETE /sessions/current/push-token`), `handlePushPayload` with dedupe (D57, D59).
 - Fake: `notify()`, `sendPush()`, `pushTokens`; trigger rules `geofence_entered`, `payment_failed`, `order_shipped`; `_Reply.notification`.

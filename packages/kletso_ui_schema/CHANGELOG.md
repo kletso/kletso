@@ -1,4 +1,4 @@
-## 0.1.0 (unreleased)
+## 0.1.0 — 2026-09-29
 
 - `app.notify` event type + `KletsoAppNotification` payload (`KletsoNotificationChannel`), schema `appNotification` def (D57).
 - `ui.patch` event + `KletsoUiPatch`; `KletsoSurface.patched`, host-first `/host/` bindings (`resolveNode(external:)`).
