@@ -1,0 +1,18 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8HOTEL00001",
+  "root": "card1",
+  "components": {
+    "card1": { "type": "card", "props": { "title": "Shibuya Grand Hotel", "subtitle": "4.6 ★ · 1.2 km from Shibuya Station", "children": ["img1", "row1", "amenities", "btns"] } },
+    "img1": { "type": "image", "props": { "src": "https://cdn.acme.com/h/1.jpg", "alt": "Hotel exterior at dusk", "aspect": "16:9" } },
+    "row1": { "type": "row", "props": { "children": ["price", "rating"], "align": "spaceBetween" } },
+    "price": { "type": "text", "props": { "text": { "path": "/hotel/priceLabel" }, "style": "title" } },
+    "rating": { "type": "badge", "props": { "label": "Great value", "tone": "info" } },
+    "amenities": { "type": "markdown", "props": { "markdown": "Free Wi-Fi · Breakfast included · [Cancellation policy](https://acme.com/hotels/h_1/policy)" } },
+    "btns": { "type": "row", "props": { "children": ["b1", "b2"] } },
+    "b1": { "type": "button", "props": { "label": "View details", "variant": "secondary" }, "actions": [ { "id": "view", "kind": "local", "name": "open_hotel", "args": { "id": "h_1" } } ] },
+    "b2": { "type": "button", "props": { "label": "Book", "variant": "primary" }, "actions": [ { "id": "book", "kind": "agent", "value": { "intent": "book", "hotelId": "h_1" }, "label": "Book Shibuya Grand" } ] }
+  },
+  "data": { "hotel": { "priceLabel": "$120 / night" } },
+  "fallbackText": "Shibuya Grand Hotel — $120/night. View details or book."
+}

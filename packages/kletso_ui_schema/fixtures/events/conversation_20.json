@@ -1,0 +1,2199 @@
+[
+  {
+    "id": "evt_01J8EVENT00001",
+    "seq": 1,
+    "type": "conversation.created",
+    "ts": "2026-09-28T12:00:00.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "data": {
+      "conversation": {
+        "id": "conv_01J8DEMO000001",
+        "agentId": "agt_01J8ACME00001",
+        "title": null,
+        "status": "open",
+        "createdAt": "2026-09-28T12:00:00.000Z",
+        "updatedAt": "2026-09-28T12:00:00.000Z",
+        "lastSeq": 0
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00002",
+    "seq": 2,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:00.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00003",
+    "seq": 3,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:00.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00004",
+    "seq": 4,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:01.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "Hi! I'm Acme's "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00005",
+    "seq": 5,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:01.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "assistant. I "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00006",
+    "seq": 6,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:01.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "can find flights "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00007",
+    "seq": 7,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:02.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "and hotels, "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00008",
+    "seq": 8,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:02.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "show your sales, "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00009",
+    "seq": 9,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:02.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "or help with "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00010",
+    "seq": 10,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:03.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "an order. What "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00011",
+    "seq": 11,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:03.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "do you need?"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00012",
+    "seq": 12,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:03.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000001",
+    "data": {
+      "messageId": "msg_01J8MSG0000001",
+      "text": "Hi! I'm Acme's assistant. I can find flights and hotels, show your sales, or help with an order. What do you need?",
+      "usage": {
+        "in": 1314,
+        "out": 48,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00013",
+    "seq": 13,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:04.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000002",
+    "data": {
+      "messageId": "msg_01J8MSG0000002",
+      "role": "user",
+      "text": "I need a flight from Tokyo to Osaka tomorrow morning",
+      "clientId": "c_01J8CLIENT0002"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00014",
+    "seq": 14,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:04.550Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00015",
+    "seq": 15,
+    "type": "tool.started",
+    "ts": "2026-09-28T12:00:04.900Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "toolCallId": "call_01J8CALL000001",
+      "name": "search_flights",
+      "args": {
+        "from": "TYO",
+        "to": "OSA",
+        "date": "2026-09-29",
+        "window": "morning"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00016",
+    "seq": 16,
+    "type": "tool.completed",
+    "ts": "2026-09-28T12:00:05.250Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "toolCallId": "call_01J8CALL000001",
+      "name": "search_flights",
+      "durationMs": 820,
+      "result": {
+        "count": 6,
+        "best": "NH873"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00017",
+    "seq": 17,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:05.600Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "messageId": "msg_01J8MSG0000003",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00018",
+    "seq": 18,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:05.950Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "messageId": "msg_01J8MSG0000003",
+      "text": "Here's the best "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00019",
+    "seq": 19,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:06.300Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "messageId": "msg_01J8MSG0000003",
+      "text": "option for tomorrow "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00020",
+    "seq": 20,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:06.650Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "messageId": "msg_01J8MSG0000003",
+      "text": "morning:"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00021",
+    "seq": 21,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:07.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8FLIGHT0001",
+        "root": "card",
+        "components": {
+          "card": {
+            "type": "card",
+            "props": {
+              "title": {
+                "path": "/flight/title"
+              },
+              "subtitle": "Tomorrow · Nonstop · Economy",
+              "children": [
+                "hero",
+                "route",
+                "divider",
+                "meta",
+                "actions"
+              ]
+            }
+          },
+          "hero": {
+            "type": "image",
+            "props": {
+              "src": "https://cdn.acme.com/flights/nh-873.jpg",
+              "alt": "Airplane at the gate",
+              "aspect": "16:9",
+              "fit": "cover"
+            }
+          },
+          "route": {
+            "type": "row",
+            "props": {
+              "children": [
+                "from",
+                "arrow",
+                "to"
+              ],
+              "gap": "md",
+              "align": "center"
+            }
+          },
+          "from": {
+            "type": "column",
+            "props": {
+              "children": [
+                "fromCode",
+                "fromTime"
+              ],
+              "gap": "sm"
+            }
+          },
+          "fromCode": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/flight/from/code"
+              },
+              "style": "title"
+            }
+          },
+          "fromTime": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/flight/from/time"
+              },
+              "style": "caption",
+              "color": "muted"
+            }
+          },
+          "arrow": {
+            "type": "text",
+            "props": {
+              "text": "→",
+              "style": "title",
+              "color": "muted"
+            }
+          },
+          "to": {
+            "type": "column",
+            "props": {
+              "children": [
+                "toCode",
+                "toTime"
+              ],
+              "gap": "sm"
+            }
+          },
+          "toCode": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/flight/to/code"
+              },
+              "style": "title"
+            }
+          },
+          "toTime": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/flight/to/time"
+              },
+              "style": "caption",
+              "color": "muted"
+            }
+          },
+          "divider": {
+            "type": "divider"
+          },
+          "meta": {
+            "type": "row",
+            "props": {
+              "children": [
+                "airline",
+                "status",
+                "price"
+              ],
+              "gap": "md",
+              "align": "spaceBetween"
+            }
+          },
+          "airline": {
+            "type": "text",
+            "props": {
+              "text": "ANA NH873",
+              "style": "caption"
+            }
+          },
+          "status": {
+            "type": "badge",
+            "props": {
+              "label": {
+                "path": "/flight/status"
+              },
+              "tone": "success"
+            }
+          },
+          "price": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/flight/priceLabel"
+              },
+              "style": "title"
+            }
+          },
+          "actions": {
+            "type": "row",
+            "props": {
+              "children": [
+                "select",
+                "details"
+              ],
+              "gap": "sm"
+            }
+          },
+          "select": {
+            "type": "button",
+            "props": {
+              "label": "Select flight",
+              "variant": "primary"
+            },
+            "actions": [
+              {
+                "id": "select",
+                "kind": "agent",
+                "value": {
+                  "intent": "select_flight",
+                  "flightId": "NH873-2026-09-29"
+                },
+                "label": "Select ANA NH873"
+              }
+            ]
+          },
+          "details": {
+            "type": "button",
+            "props": {
+              "label": "Details",
+              "variant": "secondary"
+            },
+            "actions": [
+              {
+                "id": "details",
+                "kind": "url",
+                "url": "https://acme.com/flights/NH873"
+              }
+            ]
+          }
+        },
+        "data": {
+          "flight": {
+            "title": "Tokyo → Osaka",
+            "from": {
+              "code": "HND",
+              "time": "08:15"
+            },
+            "to": {
+              "code": "ITM",
+              "time": "09:25"
+            },
+            "status": "On time",
+            "priceLabel": "¥14,800"
+          }
+        },
+        "fallbackText": "ANA NH873 Tokyo (HND 08:15) → Osaka (ITM 09:25), ¥14,800, on time. Select flight or view details at https://acme.com/flights/NH873"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00022",
+    "seq": 22,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:07.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000003",
+    "data": {
+      "messageId": "msg_01J8MSG0000003",
+      "text": "Here's the best option for tomorrow morning:",
+      "usage": {
+        "in": 1244,
+        "out": 31,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00023",
+    "seq": 23,
+    "type": "ui.action",
+    "ts": "2026-09-28T12:00:07.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000004",
+    "data": {
+      "surfaceId": "sfc_01J8FLIGHT0001",
+      "componentId": "select",
+      "actionId": "select",
+      "value": {
+        "intent": "select_flight",
+        "flightId": "NH873-2026-09-29"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00024",
+    "seq": 24,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:08.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000004",
+    "data": {
+      "messageId": "msg_01J8MSG0000004",
+      "role": "user",
+      "text": "Select ANA NH873",
+      "value": {
+        "intent": "select_flight",
+        "flightId": "NH873-2026-09-29"
+      },
+      "clientId": "c_01J8CLIENT0004"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00025",
+    "seq": 25,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:08.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00026",
+    "seq": 26,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:08.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00027",
+    "seq": 27,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:09.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "Great choice. "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00028",
+    "seq": 28,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:09.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "NH873 is held "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00029",
+    "seq": 29,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:09.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "for 20 minutes. "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00030",
+    "seq": 30,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:10.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "Anything else "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00031",
+    "seq": 31,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:10.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "I can do?"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00032",
+    "seq": 32,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:10.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8CHIPS00001",
+        "root": "chips",
+        "components": {
+          "chips": {
+            "type": "row",
+            "props": {
+              "children": [
+                "c1",
+                "c2",
+                "c3"
+              ],
+              "gap": "sm",
+              "wrap": true
+            }
+          },
+          "c1": {
+            "type": "button",
+            "props": {
+              "label": "Show me sales",
+              "variant": "secondary"
+            },
+            "actions": [
+              {
+                "id": "go",
+                "kind": "agent",
+                "value": {
+                  "intent": "show_sales"
+                },
+                "label": "Show me sales"
+              }
+            ]
+          },
+          "c2": {
+            "type": "button",
+            "props": {
+              "label": "Track my order",
+              "variant": "secondary"
+            },
+            "actions": [
+              {
+                "id": "go",
+                "kind": "agent",
+                "value": {
+                  "intent": "track_order"
+                },
+                "label": "Track my order"
+              }
+            ]
+          },
+          "c3": {
+            "type": "button",
+            "props": {
+              "label": "Talk to a human",
+              "variant": "ghost"
+            },
+            "actions": [
+              {
+                "id": "go",
+                "kind": "agent",
+                "value": {
+                  "intent": "handoff"
+                },
+                "label": "Talk to a human"
+              }
+            ]
+          }
+        },
+        "fallbackText": "You can ask: Show me sales · Track my order · Talk to a human"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00033",
+    "seq": 33,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:11.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000005",
+    "data": {
+      "messageId": "msg_01J8MSG0000005",
+      "text": "Great choice. NH873 is held for 20 minutes. Anything else I can do?",
+      "usage": {
+        "in": 1267,
+        "out": 36,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00034",
+    "seq": 34,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:11.550Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000006",
+    "data": {
+      "messageId": "msg_01J8MSG0000006",
+      "role": "user",
+      "text": "Show me sales",
+      "clientId": "c_01J8CLIENT0006"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00035",
+    "seq": 35,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:11.900Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00036",
+    "seq": 36,
+    "type": "tool.started",
+    "ts": "2026-09-28T12:00:12.250Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "toolCallId": "call_01J8CALL000002",
+      "name": "get_sales",
+      "args": {
+        "period": "2026-09",
+        "groupBy": "week"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00037",
+    "seq": 37,
+    "type": "tool.completed",
+    "ts": "2026-09-28T12:00:12.600Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "toolCallId": "call_01J8CALL000002",
+      "name": "get_sales",
+      "durationMs": 820,
+      "result": {
+        "total": 61950,
+        "currency": "USD"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00038",
+    "seq": 38,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:12.950Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00039",
+    "seq": 39,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:13.300Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "text": "Sales are up "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00040",
+    "seq": 40,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:13.650Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "text": "this month. "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00041",
+    "seq": 41,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:14.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "text": "Here's the weekly "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00042",
+    "seq": 42,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:14.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "text": "picture:"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00043",
+    "seq": 43,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:14.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8CHART00001",
+        "root": "card",
+        "components": {
+          "card": {
+            "type": "card",
+            "props": {
+              "title": "Sales this month",
+              "children": [
+                "chart",
+                "summary",
+                "cta"
+              ]
+            }
+          },
+          "chart": {
+            "type": "chart",
+            "props": {
+              "chartType": "bar",
+              "title": "Revenue by week",
+              "xLabel": "Week",
+              "yLabel": "Revenue",
+              "currency": "USD",
+              "series": [
+                {
+                  "name": "This month",
+                  "data": [
+                    {
+                      "x": "W1",
+                      "y": 12400
+                    },
+                    {
+                      "x": "W2",
+                      "y": 15800
+                    },
+                    {
+                      "x": "W3",
+                      "y": 14100
+                    },
+                    {
+                      "x": "W4",
+                      "y": 19650
+                    }
+                  ]
+                },
+                {
+                  "name": "Last month",
+                  "data": [
+                    {
+                      "x": "W1",
+                      "y": 11000
+                    },
+                    {
+                      "x": "W2",
+                      "y": 12900
+                    },
+                    {
+                      "x": "W3",
+                      "y": 13800
+                    },
+                    {
+                      "x": "W4",
+                      "y": 15200
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "summary": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/summary"
+              },
+              "style": "caption",
+              "color": "muted"
+            }
+          },
+          "cta": {
+            "type": "button",
+            "props": {
+              "label": "Break down by product",
+              "variant": "ghost"
+            },
+            "actions": [
+              {
+                "id": "drill",
+                "kind": "agent",
+                "value": {
+                  "intent": "sales_by_product",
+                  "period": "2026-09"
+                },
+                "label": "Break down by product"
+              }
+            ]
+          }
+        },
+        "data": {
+          "summary": "$61,950 total, +17% vs last month."
+        },
+        "fallbackText": "Sales this month by week: W1 $12,400, W2 $15,800, W3 $14,100, W4 $19,650 ($61,950 total, +17% vs last month)."
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00044",
+    "seq": 44,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:15.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000007",
+    "data": {
+      "messageId": "msg_01J8MSG0000007",
+      "text": "Sales are up this month. Here's the weekly picture:",
+      "usage": {
+        "in": 1251,
+        "out": 32,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00045",
+    "seq": 45,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:15.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000008",
+    "data": {
+      "messageId": "msg_01J8MSG0000008",
+      "role": "user",
+      "text": "Break down by product",
+      "clientId": "c_01J8CLIENT0008"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00046",
+    "seq": 46,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:15.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00047",
+    "seq": 47,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:16.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00048",
+    "seq": 48,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:16.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "By product this "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00049",
+    "seq": 49,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:16.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "month:\n\n1. **Trail "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00050",
+    "seq": 50,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:17.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "Runner 2** — "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00051",
+    "seq": 51,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:17.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "$24,300\n2. **Everyday "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00052",
+    "seq": 52,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:17.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "Tote** — $18,650\n3. "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00053",
+    "seq": 53,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:18.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "**Steel Bottle "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00054",
+    "seq": 54,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:18.550Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "750** — $11,200\n4. "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00055",
+    "seq": 55,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:18.900Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "Everything else "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00056",
+    "seq": 56,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:19.250Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "— $7,800"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00057",
+    "seq": 57,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:19.600Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8MSG0000009",
+      "text": "By product this month:\n\n1. **Trail Runner 2** — $24,300\n2. **Everyday Tote** — $18,650\n3. **Steel Bottle 750** — $11,200\n4. Everything else — $7,800",
+      "usage": {
+        "in": 1348,
+        "out": 57,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00058",
+    "seq": 58,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:19.950Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000010",
+    "data": {
+      "messageId": "msg_01J8MSG0000010",
+      "role": "user",
+      "text": "Also find me a hotel in Shibuya",
+      "clientId": "c_01J8CLIENT0010"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00059",
+    "seq": 59,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:20.300Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00060",
+    "seq": 60,
+    "type": "tool.started",
+    "ts": "2026-09-28T12:00:20.650Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "toolCallId": "call_01J8CALL000003",
+      "name": "search_hotels",
+      "args": {
+        "area": "Shibuya",
+        "nights": 2
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00061",
+    "seq": 61,
+    "type": "tool.completed",
+    "ts": "2026-09-28T12:00:21.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "toolCallId": "call_01J8CALL000003",
+      "name": "search_hotels",
+      "durationMs": 820,
+      "result": {
+        "count": 12,
+        "best": "h_1"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00062",
+    "seq": 62,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:21.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "messageId": "msg_01J8MSG0000011",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00063",
+    "seq": 63,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:21.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "messageId": "msg_01J8MSG0000011",
+      "text": "This one is "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00064",
+    "seq": 64,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:22.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "messageId": "msg_01J8MSG0000011",
+      "text": "a strong match "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00065",
+    "seq": 65,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:22.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "messageId": "msg_01J8MSG0000011",
+      "text": "near the station:"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00066",
+    "seq": 66,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:22.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8HOTEL00001",
+        "root": "card1",
+        "components": {
+          "card1": {
+            "type": "card",
+            "props": {
+              "title": "Shibuya Grand Hotel",
+              "subtitle": "4.6 ★ · 1.2 km from Shibuya Station",
+              "children": [
+                "img1",
+                "row1",
+                "amenities",
+                "btns"
+              ]
+            }
+          },
+          "img1": {
+            "type": "image",
+            "props": {
+              "src": "https://cdn.acme.com/h/1.jpg",
+              "alt": "Hotel exterior at dusk",
+              "aspect": "16:9"
+            }
+          },
+          "row1": {
+            "type": "row",
+            "props": {
+              "children": [
+                "price",
+                "rating"
+              ],
+              "align": "spaceBetween"
+            }
+          },
+          "price": {
+            "type": "text",
+            "props": {
+              "text": {
+                "path": "/hotel/priceLabel"
+              },
+              "style": "title"
+            }
+          },
+          "rating": {
+            "type": "badge",
+            "props": {
+              "label": "Great value",
+              "tone": "info"
+            }
+          },
+          "amenities": {
+            "type": "markdown",
+            "props": {
+              "markdown": "Free Wi-Fi · Breakfast included · [Cancellation policy](https://acme.com/hotels/h_1/policy)"
+            }
+          },
+          "btns": {
+            "type": "row",
+            "props": {
+              "children": [
+                "b1",
+                "b2"
+              ]
+            }
+          },
+          "b1": {
+            "type": "button",
+            "props": {
+              "label": "View details",
+              "variant": "secondary"
+            },
+            "actions": [
+              {
+                "id": "view",
+                "kind": "local",
+                "name": "open_hotel",
+                "args": {
+                  "id": "h_1"
+                }
+              }
+            ]
+          },
+          "b2": {
+            "type": "button",
+            "props": {
+              "label": "Book",
+              "variant": "primary"
+            },
+            "actions": [
+              {
+                "id": "book",
+                "kind": "agent",
+                "value": {
+                  "intent": "book",
+                  "hotelId": "h_1"
+                },
+                "label": "Book Shibuya Grand"
+              }
+            ]
+          }
+        },
+        "data": {
+          "hotel": {
+            "priceLabel": "$120 / night"
+          }
+        },
+        "fallbackText": "Shibuya Grand Hotel — $120/night. View details or book."
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00067",
+    "seq": 67,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:23.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000011",
+    "data": {
+      "messageId": "msg_01J8MSG0000011",
+      "text": "This one is a strong match near the station:",
+      "usage": {
+        "in": 1244,
+        "out": 31,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00068",
+    "seq": 68,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:23.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000012",
+    "data": {
+      "messageId": "msg_01J8MSG0000012",
+      "role": "user",
+      "text": "Show me products under 2000",
+      "clientId": "c_01J8CLIENT0012"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00069",
+    "seq": 69,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:23.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00070",
+    "seq": 70,
+    "type": "tool.started",
+    "ts": "2026-09-28T12:00:24.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "toolCallId": "call_01J8CALL000004",
+      "name": "search_products",
+      "args": {
+        "maxPrice": 2000,
+        "currency": "INR"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00071",
+    "seq": 71,
+    "type": "tool.completed",
+    "ts": "2026-09-28T12:00:24.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "toolCallId": "call_01J8CALL000004",
+      "name": "search_products",
+      "durationMs": 820,
+      "result": {
+        "count": 3
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00072",
+    "seq": 72,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:24.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "messageId": "msg_01J8MSG0000013",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00073",
+    "seq": 73,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:25.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "messageId": "msg_01J8MSG0000013",
+      "text": "Here is what "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00074",
+    "seq": 74,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:25.550Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "messageId": "msg_01J8MSG0000013",
+      "text": "I found in the "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00075",
+    "seq": 75,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:25.900Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "messageId": "msg_01J8MSG0000013",
+      "text": "catalogue:"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00076",
+    "seq": 76,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:26.250Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8PRODUCTS01",
+        "root": "wrap",
+        "components": {
+          "wrap": {
+            "type": "column",
+            "props": {
+              "children": [
+                "intro",
+                "cards"
+              ],
+              "gap": "md"
+            }
+          },
+          "intro": {
+            "type": "text",
+            "props": {
+              "text": "Three picks under ₹2,000:",
+              "style": "body"
+            }
+          },
+          "cards": {
+            "type": "carousel",
+            "props": {
+              "children": [
+                "p1",
+                "p2",
+                "p3"
+              ]
+            }
+          },
+          "p1": {
+            "type": "acme.productCard",
+            "props": {
+              "sku": "SKU-1001",
+              "name": "Trail Runner 2",
+              "price": 1899,
+              "currency": "INR",
+              "image": "https://cdn.acme.com/p/1001.jpg",
+              "rating": 4.5,
+              "inStock": true
+            },
+            "actions": [
+              {
+                "id": "view",
+                "kind": "local",
+                "name": "open_product",
+                "args": {
+                  "sku": "SKU-1001"
+                }
+              },
+              {
+                "id": "add",
+                "kind": "agent",
+                "value": {
+                  "intent": "add_to_cart",
+                  "sku": "SKU-1001"
+                },
+                "label": "Add Trail Runner 2 to cart"
+              }
+            ]
+          },
+          "p2": {
+            "type": "acme.productCard",
+            "props": {
+              "sku": "SKU-1002",
+              "name": "Everyday Tote",
+              "price": 1299,
+              "currency": "INR",
+              "image": "https://cdn.acme.com/p/1002.jpg",
+              "rating": 4.2,
+              "inStock": true
+            },
+            "actions": [
+              {
+                "id": "view",
+                "kind": "local",
+                "name": "open_product",
+                "args": {
+                  "sku": "SKU-1002"
+                }
+              },
+              {
+                "id": "add",
+                "kind": "agent",
+                "value": {
+                  "intent": "add_to_cart",
+                  "sku": "SKU-1002"
+                },
+                "label": "Add Everyday Tote to cart"
+              }
+            ]
+          },
+          "p3": {
+            "type": "acme.productCard",
+            "props": {
+              "sku": "SKU-1003",
+              "name": "Steel Bottle 750",
+              "price": 999,
+              "currency": "INR",
+              "image": "https://cdn.acme.com/p/1003.jpg",
+              "rating": 4.8,
+              "inStock": false
+            },
+            "actions": [
+              {
+                "id": "view",
+                "kind": "local",
+                "name": "open_product",
+                "args": {
+                  "sku": "SKU-1003"
+                }
+              },
+              {
+                "id": "notify",
+                "kind": "agent",
+                "value": {
+                  "intent": "notify_when_in_stock",
+                  "sku": "SKU-1003"
+                },
+                "label": "Notify me about Steel Bottle 750"
+              }
+            ]
+          }
+        },
+        "fallbackText": "Three picks under ₹2,000: Trail Runner 2 (₹1,899), Everyday Tote (₹1,299), Steel Bottle 750 (₹999, out of stock)."
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00077",
+    "seq": 77,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:26.600Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000013",
+    "data": {
+      "messageId": "msg_01J8MSG0000013",
+      "text": "Here is what I found in the catalogue:",
+      "usage": {
+        "in": 1238,
+        "out": 29,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00078",
+    "seq": 78,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:26.950Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000014",
+    "data": {
+      "messageId": "msg_01J8MSG0000014",
+      "role": "user",
+      "text": "Cancel my order ORD-4521",
+      "clientId": "c_01J8CLIENT0014"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00079",
+    "seq": 79,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:27.300Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00080",
+    "seq": 80,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:27.650Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "messageId": "msg_01J8MSG0000015",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00081",
+    "seq": 81,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:28.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "messageId": "msg_01J8MSG0000015",
+      "text": "I can cancel "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00082",
+    "seq": 82,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:28.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "messageId": "msg_01J8MSG0000015",
+      "text": "ORD-4521. Please "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00083",
+    "seq": 83,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:28.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "messageId": "msg_01J8MSG0000015",
+      "text": "confirm:"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00084",
+    "seq": 84,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:29.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "messageId": "msg_01J8MSG0000015",
+      "text": "I can cancel ORD-4521. Please confirm:",
+      "usage": {
+        "in": 1300,
+        "out": 40,
+        "cachedIn": 900
+      },
+      "costMicros": 900,
+      "latencyMs": 900,
+      "finishReason": "tool_calls"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00085",
+    "seq": 85,
+    "type": "tool.started",
+    "ts": "2026-09-28T12:00:29.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "toolCallId": "call_01J8CANCEL0001",
+      "name": "cancel_order",
+      "args": {
+        "orderId": "ORD-4521"
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00086",
+    "seq": 86,
+    "type": "tool.confirmation_required",
+    "ts": "2026-09-28T12:00:29.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "toolCallId": "call_01J8CANCEL0001",
+      "name": "cancel_order",
+      "args": {
+        "orderId": "ORD-4521"
+      },
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8CONFIRM001",
+        "root": "confirm",
+        "components": {
+          "confirm": {
+            "type": "confirm",
+            "props": {
+              "title": "Cancel order ORD-4521?",
+              "message": "This refunds ₹3,499 to the original payment method within 5–7 days. The order cannot be restored.",
+              "confirmLabel": "Yes, cancel order",
+              "cancelLabel": "Keep order",
+              "toolCallId": "call_01J8CANCEL0001"
+            },
+            "actions": [
+              {
+                "id": "yes",
+                "kind": "confirm",
+                "toolCallId": "call_01J8CANCEL0001",
+                "approve": true
+              },
+              {
+                "id": "no",
+                "kind": "confirm",
+                "toolCallId": "call_01J8CANCEL0001",
+                "approve": false
+              }
+            ]
+          }
+        },
+        "fallbackText": "Cancel order ORD-4521? This refunds ₹3,499 within 5–7 days and cannot be undone. Reply yes to cancel or no to keep the order."
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00087",
+    "seq": 87,
+    "type": "ui.render",
+    "ts": "2026-09-28T12:00:30.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000015",
+    "data": {
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_01J8CONFIRM001",
+        "root": "confirm",
+        "components": {
+          "confirm": {
+            "type": "confirm",
+            "props": {
+              "title": "Cancel order ORD-4521?",
+              "message": "This refunds ₹3,499 to the original payment method within 5–7 days. The order cannot be restored.",
+              "confirmLabel": "Yes, cancel order",
+              "cancelLabel": "Keep order",
+              "toolCallId": "call_01J8CANCEL0001"
+            },
+            "actions": [
+              {
+                "id": "yes",
+                "kind": "confirm",
+                "toolCallId": "call_01J8CANCEL0001",
+                "approve": true
+              },
+              {
+                "id": "no",
+                "kind": "confirm",
+                "toolCallId": "call_01J8CANCEL0001",
+                "approve": false
+              }
+            ]
+          }
+        },
+        "fallbackText": "Cancel order ORD-4521? This refunds ₹3,499 within 5–7 days and cannot be undone. Reply yes to cancel or no to keep the order."
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00088",
+    "seq": 88,
+    "type": "ui.action",
+    "ts": "2026-09-28T12:00:30.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000016",
+    "data": {
+      "surfaceId": "sfc_01J8CONFIRM001",
+      "componentId": "confirm",
+      "actionId": "yes",
+      "value": {
+        "toolCallId": "call_01J8CANCEL0001",
+        "approve": true
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00089",
+    "seq": 89,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:30.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000016",
+    "data": {
+      "messageId": "msg_01J8MSG0000016",
+      "role": "user",
+      "text": "Yes, cancel order",
+      "value": {
+        "toolCallId": "call_01J8CANCEL0001",
+        "approve": true
+      },
+      "clientId": "c_01J8CLIENT0016"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00090",
+    "seq": 90,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:31.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00091",
+    "seq": 91,
+    "type": "tool.completed",
+    "ts": "2026-09-28T12:00:31.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "toolCallId": "call_01J8CANCEL0001",
+      "name": "cancel_order",
+      "durationMs": 640,
+      "result": {
+        "status": "cancelled",
+        "refund": 3499
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00092",
+    "seq": 92,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:31.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00093",
+    "seq": 93,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:32.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "Done. Order "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00094",
+    "seq": 94,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:32.550Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "ORD-4521 is "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00095",
+    "seq": 95,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:32.900Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "cancelled and "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00096",
+    "seq": 96,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:33.250Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "₹3,499 will "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00097",
+    "seq": 97,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:33.600Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "be refunded "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00098",
+    "seq": 98,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:33.950Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "within 5–7 days."
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00099",
+    "seq": 99,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:34.300Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000017",
+    "data": {
+      "messageId": "msg_01J8MSG0000017",
+      "text": "Done. Order ORD-4521 is cancelled and ₹3,499 will be refunded within 5–7 days.",
+      "usage": {
+        "in": 1278,
+        "out": 39,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00100",
+    "seq": 100,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:34.650Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000018",
+    "data": {
+      "messageId": "msg_01J8MSG0000018",
+      "role": "user",
+      "text": "I'd like to talk to a human",
+      "clientId": "c_01J8CLIENT0018"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00101",
+    "seq": 101,
+    "type": "agent.typing",
+    "ts": "2026-09-28T12:00:35.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {}
+  },
+  {
+    "id": "evt_01J8EVENT00102",
+    "seq": 102,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:35.350Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00103",
+    "seq": 103,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:35.700Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "Of course. I'm "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00104",
+    "seq": 104,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:36.050Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "connecting you "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00105",
+    "seq": 105,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:36.400Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "with the Acme "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00106",
+    "seq": 106,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:36.750Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "support team "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00107",
+    "seq": 107,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:37.100Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "now; they have "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00108",
+    "seq": 108,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:37.450Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "the full context "
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00109",
+    "seq": 109,
+    "type": "message.delta",
+    "ts": "2026-09-28T12:00:37.800Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "of this chat."
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00110",
+    "seq": 110,
+    "type": "message.completed",
+    "ts": "2026-09-28T12:00:38.150Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "messageId": "msg_01J8MSG0000019",
+      "text": "Of course. I'm connecting you with the Acme support team now; they have the full context of this chat.",
+      "usage": {
+        "in": 1302,
+        "out": 45,
+        "cachedIn": 900,
+        "reasoning": 0
+      },
+      "costMicros": 1850,
+      "latencyMs": 1400,
+      "finishReason": "stop"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00111",
+    "seq": 111,
+    "type": "handoff.started",
+    "ts": "2026-09-28T12:00:38.500Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "target": "inbox",
+      "agentName": "Acme support"
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00112",
+    "seq": 112,
+    "type": "conversation.updated",
+    "ts": "2026-09-28T12:00:38.850Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000019",
+    "data": {
+      "conversation": {
+        "id": "conv_01J8DEMO000001",
+        "agentId": "agt_01J8ACME00001",
+        "title": "Flight, hotel and order help",
+        "status": "handoff",
+        "createdAt": "2026-09-28T12:00:00.000Z",
+        "updatedAt": "2026-09-28T12:00:38.850Z",
+        "lastSeq": 112
+      }
+    }
+  },
+  {
+    "id": "evt_01J8EVENT00113",
+    "seq": 113,
+    "type": "message.created",
+    "ts": "2026-09-28T12:00:39.200Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000020",
+    "data": {
+      "messageId": "msg_01J8MSG0000020",
+      "role": "user",
+      "text": "Thank you!",
+      "clientId": "c_01J8CLIENT0020"
+    }
+  }
+]

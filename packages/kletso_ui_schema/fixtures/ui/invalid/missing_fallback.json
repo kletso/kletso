@@ -1,0 +1,6 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8NOFALLBACK",
+  "root": "a",
+  "components": { "a": { "type": "text", "props": { "text": "no fallback" } } }
+}

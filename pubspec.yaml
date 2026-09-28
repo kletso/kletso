@@ -1,0 +1,9 @@
+name: kletso_sdk_workspace
+publish_to: none
+environment:
+  sdk: ^3.9.0
+workspace:
+  - packages/kletso_ui_schema
+  - packages/kletso_core
+  - packages/kletso_flutter
+  - example/acme_shop

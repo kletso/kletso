@@ -1,0 +1,7 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8NOACTION01",
+  "root": "b",
+  "components": { "b": { "type": "button", "props": { "label": "Does nothing" } } },
+  "fallbackText": "A button with no action renders disabled."
+}

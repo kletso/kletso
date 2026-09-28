@@ -1,0 +1,11 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8UNKNOWN001",
+  "root": "root",
+  "components": {
+    "root": { "type": "column", "props": { "children": ["known", "mystery"] } },
+    "known": { "type": "text", "props": { "text": "This part renders." } },
+    "mystery": { "type": "vendor.hologram", "props": { "depth": 3 } }
+  },
+  "fallbackText": "This part renders. (A hologram was here.)"
+}

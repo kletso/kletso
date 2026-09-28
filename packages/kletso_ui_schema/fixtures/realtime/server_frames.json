@@ -1,0 +1,9 @@
+[
+  { "t": "ready", "seq": 41, "conversationId": "conv_01J8DEMO000001" },
+  { "t": "ready", "seq": 0 },
+  { "t": "pong" },
+  { "t": "event", "event": { "id": "evt_01J8EVENT00042", "seq": 42, "type": "message.delta", "ts": "2026-09-28T12:00:00.123Z", "conversationId": "conv_01J8DEMO000001", "turnId": "trn_01J8TURN000007", "data": { "messageId": "msg_01J8MSG0000013", "text": "Hel" } } },
+  { "t": "event", "event": { "id": "evt_01J8EVENT00043", "seq": 43, "type": "agent.typing", "ts": "2026-09-28T12:00:00.500Z", "conversationId": "conv_01J8DEMO000001", "data": {} } },
+  { "t": "error", "code": "rate_limited", "message": "Too many messages, slow down", "retryable": true, "retryAfterMs": 2000 },
+  { "t": "error", "code": "invalid_request", "message": "clientId is required", "retryable": false }
+]

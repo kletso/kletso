@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kletso.ai/schemas/kletso.realtime.v1.json",
+  "title": "Kletso realtime frames",
+  "description": "Frames exchanged over wss://api.kletso.ai/v1/realtime. Every frame is a JSON object with a short discriminator t. Clients send the auth frame first and wait for ready before anything else.",
+  "oneOf": [{ "$ref": "#/$defs/clientFrame" }, { "$ref": "#/$defs/serverFrame" }],
+  "$defs": {
+    "clientId": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "conversationId": { "type": "string", "pattern": "^conv_[A-Za-z0-9]+$" },
+    "clientFrame": {
+      "type": "object",
+      "required": ["t"],
+      "oneOf": [
+        { "properties": { "t": { "const": "auth" }, "token": { "type": "string", "minLength": 1 }, "conversationId": { "$ref": "#/$defs/conversationId" }, "after": { "type": "integer", "minimum": 0 } }, "required": ["token"] },
+        { "properties": { "t": { "const": "message" }, "text": { "type": ["string", "null"] }, "value": {}, "clientId": { "$ref": "#/$defs/clientId" } }, "required": ["clientId"] },
+        { "properties": { "t": { "const": "action" }, "surfaceId": { "type": "string" }, "componentId": { "type": "string" }, "actionId": { "type": "string" }, "value": {}, "clientId": { "$ref": "#/$defs/clientId" } }, "required": ["surfaceId", "componentId", "actionId", "clientId"] },
+        { "properties": { "t": { "const": "context" }, "merge": { "type": "object" }, "replace": { "type": "object" } } },
+        { "properties": { "t": { "const": "track" }, "name": { "type": "string", "minLength": 1 }, "properties": { "type": "object" } }, "required": ["name"] },
+        { "properties": { "t": { "const": "screen" }, "name": { "type": "string", "minLength": 1 } }, "required": ["name"] },
+        { "properties": { "t": { "const": "switch" }, "conversationId": { "$ref": "#/$defs/conversationId" }, "after": { "type": "integer", "minimum": 0 } }, "required": ["conversationId"] },
+        { "properties": { "t": { "const": "typing" } } },
+        { "properties": { "t": { "const": "ping" } } }
+      ]
+    },
+    "serverFrame": {
+      "type": "object",
+      "required": ["t"],
+      "oneOf": [
+        { "properties": { "t": { "const": "ready" }, "seq": { "type": "integer", "minimum": 0 }, "conversationId": { "$ref": "#/$defs/conversationId" } }, "required": ["seq"] },
+        { "properties": { "t": { "const": "pong" } } },
+        { "properties": { "t": { "const": "event" }, "event": { "$ref": "kletso.events.v1.json" } }, "required": ["event"] },
+        { "properties": { "t": { "const": "error" }, "code": { "type": "string" }, "message": { "type": "string" }, "retryable": { "type": "boolean" }, "retryAfterMs": { "type": "integer" } }, "required": ["code", "message"] }
+      ]
+    },
+    "closeCodes": {
+      "description": "WebSocket close codes used by the server.",
+      "enum": [1000, 1001, 4000, 4401, 4403]
+    }
+  }
+}

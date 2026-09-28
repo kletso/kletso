@@ -1,0 +1,18 @@
+{
+  "description": "Expected outcome of parsing each invalid fixture with the standard limits. 'rejected' = must not render (fatal code); 'degraded' = renders with the listed non-fatal issue.",
+  "cases": [
+    { "file": "unknown_type.json", "expect": "degraded", "code": "unknownComponent" },
+    { "file": "button_without_action.json", "expect": "degraded", "code": "buttonWithoutAction" },
+    { "file": "dangling_child.json", "expect": "degraded", "code": "danglingChild" },
+    { "file": "cycle.json", "expect": "rejected", "code": "cycle" },
+    { "file": "missing_root.json", "expect": "rejected", "code": "missingRoot" },
+    { "file": "wrong_schema.json", "expect": "rejected", "code": "invalidSchema" },
+    { "file": "missing_fallback.json", "expect": "rejected", "code": "invalidSchema" },
+    { "file": "not_an_object.json", "expect": "rejected", "code": "invalidSchema" },
+    { "file": "depth_overflow.json", "expect": "rejected", "code": "depthExceeded", "generated": true },
+    { "file": "too_many_components.json", "expect": "rejected", "code": "tooManyComponents", "generated": true },
+    { "file": "oversize.json", "expect": "rejected", "code": "oversize", "generated": true },
+    { "file": "string_too_long.json", "expect": "rejected", "code": "stringTooLong", "generated": true },
+    { "file": "array_too_long.json", "expect": "rejected", "code": "arrayTooLong", "generated": true }
+  ]
+}

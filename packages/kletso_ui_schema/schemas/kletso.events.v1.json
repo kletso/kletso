@@ -1,0 +1,717 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kletso.ai/schemas/kletso.events.v1.json",
+  "title": "kletso.events/v1 envelope",
+  "description": "One event in a conversation's ordered log. seq is monotonic per conversation and is the replay cursor. Unknown event types must be tolerated by every client.",
+  "type": "object",
+  "required": [
+    "id",
+    "seq",
+    "type",
+    "ts",
+    "conversationId",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^evt_[A-Za-z0-9]+$"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[a-z]+(\\.[a-z_]+)+$",
+      "maxLength": 64
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "conversationId": {
+      "type": "string",
+      "pattern": "^conv_[A-Za-z0-9]+$"
+    },
+    "turnId": {
+      "type": "string",
+      "pattern": "^trn_[A-Za-z0-9]+$"
+    },
+    "data": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "message.created"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/messageCreated"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "message.delta"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/messageDelta"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "message.completed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/messageCompleted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "tool.started"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/toolStarted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "tool.confirmation_required"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/toolConfirmationRequired"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "tool.completed",
+              "tool.failed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/toolFinished"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ui.render"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/uiRender"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ui.action"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/uiAction"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "handoff.started",
+              "handoff.completed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/handoff"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "trigger.fired"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/triggerFired"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/error"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "conversation.created",
+              "conversation.updated",
+              "conversation.closed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/conversationEvent"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "app.command"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/appCommand"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ui.patch"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/uiPatch"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "app.notify"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/appNotification"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "messageId": {
+      "type": "string",
+      "pattern": "^msg_[A-Za-z0-9]+$"
+    },
+    "role": {
+      "enum": [
+        "user",
+        "assistant",
+        "system",
+        "tool"
+      ]
+    },
+    "conversation": {
+      "type": "object",
+      "required": [
+        "id",
+        "agentId",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^conv_[A-Za-z0-9]+$"
+        },
+        "agentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "open",
+            "handoff",
+            "closed"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastSeq": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "conversationEvent": {
+      "type": "object",
+      "required": [
+        "conversation"
+      ],
+      "properties": {
+        "conversation": {
+          "$ref": "#/$defs/conversation"
+        }
+      }
+    },
+    "messageCreated": {
+      "type": "object",
+      "required": [
+        "messageId",
+        "role"
+      ],
+      "properties": {
+        "messageId": {
+          "$ref": "#/$defs/messageId"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "text": {
+          "type": "string"
+        },
+        "value": {},
+        "clientId": {
+          "type": "string"
+        }
+      }
+    },
+    "messageDelta": {
+      "type": "object",
+      "required": [
+        "messageId",
+        "text"
+      ],
+      "properties": {
+        "messageId": {
+          "$ref": "#/$defs/messageId"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "messageCompleted": {
+      "type": "object",
+      "required": [
+        "messageId",
+        "text"
+      ],
+      "properties": {
+        "messageId": {
+          "$ref": "#/$defs/messageId"
+        },
+        "text": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "in": {
+              "type": "integer"
+            },
+            "out": {
+              "type": "integer"
+            },
+            "cachedIn": {
+              "type": "integer"
+            },
+            "reasoning": {
+              "type": "integer"
+            }
+          }
+        },
+        "costMicros": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latencyMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "finishReason": {
+          "enum": [
+            "stop",
+            "length",
+            "tool_calls",
+            "content_filter",
+            "error",
+            "cancelled"
+          ]
+        }
+      }
+    },
+    "toolStarted": {
+      "type": "object",
+      "required": [
+        "toolCallId",
+        "name"
+      ],
+      "properties": {
+        "toolCallId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "args": {
+          "type": "object"
+        }
+      }
+    },
+    "toolConfirmationRequired": {
+      "type": "object",
+      "required": [
+        "toolCallId",
+        "name",
+        "surface"
+      ],
+      "properties": {
+        "toolCallId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "args": {
+          "type": "object"
+        },
+        "surface": {
+          "$ref": "kletso.ui.v1.json"
+        }
+      }
+    },
+    "toolFinished": {
+      "type": "object",
+      "required": [
+        "toolCallId",
+        "name",
+        "durationMs"
+      ],
+      "properties": {
+        "toolCallId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "result": {},
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "uiRender": {
+      "type": "object",
+      "required": [
+        "surface"
+      ],
+      "properties": {
+        "surface": {
+          "$ref": "kletso.ui.v1.json"
+        }
+      }
+    },
+    "uiAction": {
+      "type": "object",
+      "required": [
+        "surfaceId",
+        "componentId",
+        "actionId"
+      ],
+      "properties": {
+        "surfaceId": {
+          "type": "string"
+        },
+        "componentId": {
+          "type": "string"
+        },
+        "actionId": {
+          "type": "string"
+        },
+        "value": {}
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "required": [
+        "target"
+      ],
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "agentName": {
+          "type": "string"
+        }
+      }
+    },
+    "triggerFired": {
+      "type": "object",
+      "required": [
+        "triggerId",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "triggerId": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "manual",
+            "event",
+            "screen",
+            "time"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "appCommand": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "args": {
+          "type": "object"
+        },
+        "closeChat": {
+          "type": "boolean"
+        }
+      }
+    },
+    "uiPatch": {
+      "type": "object",
+      "required": [
+        "surfaceId"
+      ],
+      "properties": {
+        "surfaceId": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        },
+        "components": {
+          "type": "object",
+          "description": "Components to replace by id; null removes one."
+        }
+      }
+    },
+    "appNotification": {
+      "type": "object",
+      "description": "A proactive notification for the host app, independent of a chat message. Produced by workflow/trigger rules; delivered live over the socket or inside a push payload under the `kletso` key.",
+      "required": [
+        "notificationId",
+        "title"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "notificationId": {
+          "type": "string",
+          "pattern": "^ntf_[A-Za-z0-9]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "banner",
+            "toast",
+            "alert",
+            "system",
+            "silent"
+          ],
+          "default": "banner",
+          "description": "How the SDK presents it: in-app banner (top), toast (bottom), modal alert, the OS notification tray (falls back to banner when the host has no system notifier), or no UI at all (openChat/action only)."
+        },
+        "openChat": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open the chat on this conversation when tapped (silent: immediately)."
+        },
+        "action": {
+          "$ref": "kletso.ui.v1.json#/$defs/action",
+          "description": "Optional tap action: local (host handler), url, or agent (sent after the chat opens)."
+        },
+        "surface": {
+          "$ref": "kletso.ui.v1.json",
+          "description": "Optional kletso.ui/v1 surface rendered inside the banner or alert."
+        },
+        "ttlSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400,
+          "description": "Auto-dismiss for banner/toast; alerts stay until dismissed."
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "data": {
+          "type": "object",
+          "description": "Opaque host data (deep-link payload etc.)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1706 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kletso.ai/schemas/kletso.ui.v1.json",
+  "title": "kletso.ui/v1 surface",
+  "description": "A server-driven UI surface: a flat map of components keyed by id, a root id, a data model addressed by JSON pointers and a mandatory plain-text fallback. Depth (<= 16), cycles and byte size (<= 256 KB) are enforced by the validators, not by this schema.",
+  "type": "object",
+  "required": [
+    "schema",
+    "surfaceId",
+    "root",
+    "components",
+    "fallbackText"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "kletso.ui/v1"
+    },
+    "surfaceId": {
+      "$ref": "#/$defs/id"
+    },
+    "root": {
+      "$ref": "#/$defs/id"
+    },
+    "components": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 500,
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "data": {
+      "type": "object"
+    },
+    "fallbackText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "typeName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][A-Za-z0-9]*(\\.[a-z][A-Za-z0-9]*)*$"
+    },
+    "shortString": {
+      "type": "string",
+      "maxLength": 8192
+    },
+    "binding": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^(/([^/~]|~0|~1)*)*$"
+        }
+      }
+    },
+    "stringOrBinding": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/shortString"
+        },
+        {
+          "$ref": "#/$defs/binding"
+        }
+      ]
+    },
+    "numberOrBinding": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/binding"
+        }
+      ]
+    },
+    "booleanOrBinding": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/binding"
+        }
+      ]
+    },
+    "childList": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "url": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^(https://|r2://)"
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/typeName"
+        },
+        "props": {
+          "type": "object"
+        },
+        "actions": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "text"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/text"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "markdown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/markdown"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "card"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/card"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "row",
+                  "column"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/layout"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "image"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/image"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "avatar"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/avatar"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "button"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "actions"
+            ],
+            "properties": {
+              "actions": {
+                "minItems": 1
+              },
+              "props": {
+                "$ref": "#/$defs/props/button"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "list"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/list"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "table"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/table"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "chart"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/chart"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "carousel"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/carousel"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "form"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/form"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "input"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/input"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "select"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/select"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "confirm"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/confirm"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "loading"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/loading"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "error"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/error"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "badge"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/badge"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "link"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/link"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "map"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/map"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "video"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/video"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "audio"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/audio"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "rating"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/rating"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "steps"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/steps"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "accordion"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/accordion"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "tabs"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/tabs"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "countdown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/countdown"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "progress"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "$ref": "#/$defs/props/progress"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "label": {
+          "$ref": "#/$defs/shortString"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "const": "local"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "args": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "agent"
+            },
+            "value": {}
+          },
+          "required": [
+            "value"
+          ]
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "workflow"
+            },
+            "workflowId": {
+              "$ref": "#/$defs/id"
+            },
+            "input": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "workflowId"
+          ]
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "url"
+            },
+            "url": {
+              "$ref": "#/$defs/url"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "submit"
+            },
+            "formId": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "formId"
+          ]
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "confirm"
+            },
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "approve": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "toolCallId",
+            "approve"
+          ]
+        }
+      ]
+    },
+    "props": {
+      "text": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "style": {
+            "enum": [
+              "body",
+              "title",
+              "caption",
+              "code"
+            ]
+          },
+          "color": {
+            "enum": [
+              "default",
+              "muted",
+              "success",
+              "error"
+            ]
+          }
+        }
+      },
+      "markdown": {
+        "type": "object",
+        "required": [
+          "markdown"
+        ],
+        "properties": {
+          "markdown": {
+            "$ref": "#/$defs/stringOrBinding"
+          }
+        }
+      },
+      "card": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "subtitle": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "children": {
+            "$ref": "#/$defs/childList"
+          }
+        }
+      },
+      "layout": {
+        "type": "object",
+        "required": [
+          "children"
+        ],
+        "properties": {
+          "children": {
+            "$ref": "#/$defs/childList"
+          },
+          "gap": {
+            "enum": [
+              "sm",
+              "md",
+              "lg"
+            ]
+          },
+          "align": {
+            "enum": [
+              "start",
+              "center",
+              "end",
+              "stretch",
+              "spaceBetween"
+            ]
+          },
+          "wrap": {
+            "type": "boolean"
+          }
+        }
+      },
+      "image": {
+        "type": "object",
+        "required": [
+          "src",
+          "alt"
+        ],
+        "properties": {
+          "src": {
+            "$ref": "#/$defs/url"
+          },
+          "alt": {
+            "$ref": "#/$defs/shortString"
+          },
+          "aspect": {
+            "enum": [
+              "1:1",
+              "4:3",
+              "16:9",
+              "3:4"
+            ]
+          },
+          "fit": {
+            "enum": [
+              "cover",
+              "contain"
+            ]
+          }
+        }
+      },
+      "avatar": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "$ref": "#/$defs/url"
+          },
+          "initials": {
+            "type": "string",
+            "maxLength": 3
+          },
+          "size": {
+            "enum": [
+              "sm",
+              "md",
+              "lg"
+            ]
+          }
+        }
+      },
+      "button": {
+        "type": "object",
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "variant": {
+            "enum": [
+              "primary",
+              "secondary",
+              "ghost",
+              "destructive"
+            ]
+          },
+          "icon": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "disabled": {
+            "$ref": "#/$defs/booleanOrBinding"
+          }
+        }
+      },
+      "list": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "title": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "subtitle": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "leading": {
+                  "type": "object",
+                  "properties": {
+                    "image": {
+                      "$ref": "#/$defs/url"
+                    },
+                    "icon": {
+                      "type": "string",
+                      "maxLength": 64
+                    }
+                  }
+                },
+                "trailing": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "$ref": "#/$defs/shortString"
+                    },
+                    "badge": {
+                      "$ref": "#/$defs/shortString"
+                    },
+                    "tone": {
+                      "enum": [
+                        "neutral",
+                        "success",
+                        "warning",
+                        "error",
+                        "info"
+                      ]
+                    }
+                  }
+                },
+                "actions": {
+                  "type": "array",
+                  "maxItems": 20,
+                  "items": {
+                    "$ref": "#/$defs/action"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "table": {
+        "type": "object",
+        "required": [
+          "columns",
+          "rows"
+        ],
+        "properties": {
+          "caption": {
+            "$ref": "#/$defs/shortString"
+          },
+          "columns": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "label"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "label": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "align": {
+                  "enum": [
+                    "start",
+                    "center",
+                    "end"
+                  ]
+                }
+              }
+            }
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "chart": {
+        "type": "object",
+        "required": [
+          "chartType",
+          "series"
+        ],
+        "properties": {
+          "chartType": {
+            "enum": [
+              "line",
+              "bar",
+              "pie"
+            ]
+          },
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "xLabel": {
+            "$ref": "#/$defs/shortString"
+          },
+          "yLabel": {
+            "$ref": "#/$defs/shortString"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "series": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "data"
+              ],
+              "properties": {
+                "name": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "data": {
+                  "type": "array",
+                  "maxItems": 200,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "properties": {
+                      "x": {
+                        "type": [
+                          "string",
+                          "number"
+                        ]
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "carousel": {
+        "type": "object",
+        "required": [
+          "children"
+        ],
+        "properties": {
+          "children": {
+            "$ref": "#/$defs/childList"
+          }
+        }
+      },
+      "formField": {
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "label"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "kind": {
+            "enum": [
+              "text",
+              "email",
+              "number",
+              "select",
+              "date",
+              "toggle",
+              "textarea"
+            ]
+          },
+          "label": {
+            "$ref": "#/$defs/shortString"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "$ref": "#/$defs/shortString"
+          },
+          "options": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
+                "label": {
+                  "$ref": "#/$defs/shortString"
+                }
+              }
+            }
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "default": {}
+        }
+      },
+      "form": {
+        "type": "object",
+        "required": [
+          "id",
+          "fields"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "$ref": "#/$defs/props/formField"
+            }
+          },
+          "submitLabel": {
+            "$ref": "#/$defs/shortString"
+          }
+        }
+      },
+      "input": {
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "label"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "kind": {
+            "enum": [
+              "text",
+              "email",
+              "number",
+              "date",
+              "textarea"
+            ]
+          },
+          "label": {
+            "$ref": "#/$defs/shortString"
+          },
+          "placeholder": {
+            "$ref": "#/$defs/shortString"
+          }
+        }
+      },
+      "select": {
+        "type": "object",
+        "required": [
+          "name",
+          "label",
+          "options"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "label": {
+            "$ref": "#/$defs/shortString"
+          },
+          "options": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                },
+                "label": {
+                  "$ref": "#/$defs/shortString"
+                }
+              }
+            }
+          },
+          "multiple": {
+            "type": "boolean"
+          }
+        }
+      },
+      "confirm": {
+        "type": "object",
+        "required": [
+          "title",
+          "message",
+          "toolCallId"
+        ],
+        "properties": {
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "message": {
+            "$ref": "#/$defs/shortString"
+          },
+          "confirmLabel": {
+            "$ref": "#/$defs/shortString"
+          },
+          "cancelLabel": {
+            "$ref": "#/$defs/shortString"
+          },
+          "toolCallId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "loading": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "$ref": "#/$defs/shortString"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "$ref": "#/$defs/shortString"
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "badge": {
+        "type": "object",
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "tone": {
+            "enum": [
+              "neutral",
+              "success",
+              "warning",
+              "error",
+              "info"
+            ]
+          }
+        }
+      },
+      "link": {
+        "type": "object",
+        "required": [
+          "label",
+          "url"
+        ],
+        "properties": {
+          "label": {
+            "$ref": "#/$defs/shortString"
+          },
+          "url": {
+            "$ref": "#/$defs/url"
+          }
+        }
+      },
+      "map": {
+        "type": "object",
+        "required": [
+          "markers"
+        ],
+        "properties": {
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "center": {
+            "type": "object",
+            "required": [
+              "lat",
+              "lng"
+            ],
+            "properties": {
+              "lat": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "lng": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            }
+          },
+          "zoom": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "markers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "lat",
+                "lng"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                },
+                "label": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "tone": {
+                  "enum": [
+                    "neutral",
+                    "success",
+                    "warning",
+                    "error",
+                    "info"
+                  ]
+                },
+                "actions": {
+                  "type": "array",
+                  "maxItems": 20,
+                  "items": {
+                    "$ref": "#/$defs/action"
+                  }
+                }
+              }
+            }
+          },
+          "route": {
+            "type": "array",
+            "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": [
+                "lat",
+                "lng"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "staticImage": {
+            "$ref": "#/$defs/url"
+          },
+          "aspect": {
+            "enum": [
+              "1:1",
+              "4:3",
+              "16:9",
+              "3:4"
+            ]
+          }
+        }
+      },
+      "video": {
+        "type": "object",
+        "required": [
+          "src"
+        ],
+        "properties": {
+          "src": {
+            "$ref": "#/$defs/url"
+          },
+          "poster": {
+            "$ref": "#/$defs/url"
+          },
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "durationSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "autoplay": {
+            "type": "boolean"
+          },
+          "captions": {
+            "$ref": "#/$defs/url"
+          },
+          "aspect": {
+            "enum": [
+              "1:1",
+              "4:3",
+              "16:9",
+              "3:4"
+            ]
+          }
+        }
+      },
+      "audio": {
+        "type": "object",
+        "required": [
+          "src"
+        ],
+        "properties": {
+          "src": {
+            "$ref": "#/$defs/url"
+          },
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "subtitle": {
+            "$ref": "#/$defs/shortString"
+          },
+          "durationSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "artwork": {
+            "$ref": "#/$defs/url"
+          },
+          "transcript": {
+            "$ref": "#/$defs/shortString"
+          }
+        }
+      },
+      "rating": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "$ref": "#/$defs/binding"
+              }
+            ]
+          },
+          "max": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "label": {
+            "$ref": "#/$defs/shortString"
+          },
+          "interactive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "steps": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "title": {
+            "$ref": "#/$defs/shortString"
+          },
+          "orientation": {
+            "enum": [
+              "vertical",
+              "horizontal"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "status"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "title": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "subtitle": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "status": {
+                  "enum": [
+                    "done",
+                    "current",
+                    "upcoming",
+                    "failed"
+                  ]
+                },
+                "timestamp": {
+                  "$ref": "#/$defs/shortString"
+                }
+              }
+            }
+          }
+        }
+      },
+      "accordion": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "title": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "markdown": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "children": {
+                  "$ref": "#/$defs/childList"
+                },
+                "expanded": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "tabs": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "initial": {
+            "$ref": "#/$defs/id"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "children"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "label": {
+                  "$ref": "#/$defs/shortString"
+                },
+                "icon": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "children": {
+                  "$ref": "#/$defs/childList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "countdown": {
+        "type": "object",
+        "required": [
+          "endsAt"
+        ],
+        "properties": {
+          "endsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "label": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "expiredLabel": {
+            "$ref": "#/$defs/shortString"
+          },
+          "tone": {
+            "enum": [
+              "neutral",
+              "success",
+              "warning",
+              "error",
+              "info"
+            ]
+          }
+        }
+      },
+      "progress": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "$ref": "#/$defs/binding"
+              }
+            ]
+          },
+          "label": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "detail": {
+            "$ref": "#/$defs/stringOrBinding"
+          },
+          "tone": {
+            "enum": [
+              "neutral",
+              "success",
+              "warning",
+              "error",
+              "info"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

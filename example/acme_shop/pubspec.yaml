@@ -1,0 +1,29 @@
+name: acme_shop
+description: Acme Shop — the Kletso example app (also the pub.dev example for kletso_flutter).
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_local_notifications: ^22.3.1
+  flutter_map: ^8.3.2
+  kletso_core: ^0.1.0
+  kletso_flutter: ^0.1.0
+  latlong2: ^0.10.1
+  url_launcher: ^6.3.2
+  video_player: ^2.14.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

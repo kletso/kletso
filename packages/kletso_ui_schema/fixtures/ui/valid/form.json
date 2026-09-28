@@ -1,0 +1,21 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8FORM000001",
+  "root": "form",
+  "components": {
+    "form": { "type": "form", "props": {
+      "id": "f_callback", "title": "Request a callback", "submitLabel": "Request callback",
+      "fields": [
+        { "name": "name", "kind": "text", "label": "Your name", "required": true, "placeholder": "Ada Lovelace" },
+        { "name": "email", "kind": "email", "label": "Email", "required": true },
+        { "name": "phone", "kind": "text", "label": "Phone", "placeholder": "+91 …" },
+        { "name": "topic", "kind": "select", "label": "Topic", "required": true, "options": [ { "value": "billing", "label": "Billing" }, { "value": "shipping", "label": "Shipping" }, { "value": "other", "label": "Something else" } ] },
+        { "name": "guests", "kind": "number", "label": "People on the call", "min": 1, "max": 5, "default": 1 },
+        { "name": "when", "kind": "date", "label": "Preferred date" },
+        { "name": "urgent", "kind": "toggle", "label": "This is urgent", "default": false },
+        { "name": "notes", "kind": "textarea", "label": "Anything we should know?", "placeholder": "Order number, context…" }
+      ] },
+      "actions": [ { "id": "submit", "kind": "submit", "formId": "f_callback" } ] }
+  },
+  "fallbackText": "Request a callback: tell us your name, email, phone, topic and preferred date."
+}

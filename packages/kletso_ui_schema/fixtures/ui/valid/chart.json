@@ -1,0 +1,18 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8CHART00001",
+  "root": "card",
+  "components": {
+    "card": { "type": "card", "props": { "title": "Sales this month", "children": ["chart", "summary", "cta"] } },
+    "chart": { "type": "chart", "props": {
+      "chartType": "bar", "title": "Revenue by week", "xLabel": "Week", "yLabel": "Revenue", "currency": "USD",
+      "series": [
+        { "name": "This month", "data": [ { "x": "W1", "y": 12400 }, { "x": "W2", "y": 15800 }, { "x": "W3", "y": 14100 }, { "x": "W4", "y": 19650 } ] },
+        { "name": "Last month", "data": [ { "x": "W1", "y": 11000 }, { "x": "W2", "y": 12900 }, { "x": "W3", "y": 13800 }, { "x": "W4", "y": 15200 } ] }
+      ] } },
+    "summary": { "type": "text", "props": { "text": { "path": "/summary" }, "style": "caption", "color": "muted" } },
+    "cta": { "type": "button", "props": { "label": "Break down by product", "variant": "ghost" }, "actions": [ { "id": "drill", "kind": "agent", "value": { "intent": "sales_by_product", "period": "2026-09" }, "label": "Break down by product" } ] }
+  },
+  "data": { "summary": "$61,950 total, +17% vs last month." },
+  "fallbackText": "Sales this month by week: W1 $12,400, W2 $15,800, W3 $14,100, W4 $19,650 ($61,950 total, +17% vs last month)."
+}

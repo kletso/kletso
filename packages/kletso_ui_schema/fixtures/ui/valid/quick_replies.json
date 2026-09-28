@@ -1,0 +1,12 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8CHIPS00001",
+  "root": "chips",
+  "components": {
+    "chips": { "type": "row", "props": { "children": ["c1", "c2", "c3"], "gap": "sm", "wrap": true } },
+    "c1": { "type": "button", "props": { "label": "Show me sales", "variant": "secondary" }, "actions": [ { "id": "go", "kind": "agent", "value": { "intent": "show_sales" }, "label": "Show me sales" } ] },
+    "c2": { "type": "button", "props": { "label": "Track my order", "variant": "secondary" }, "actions": [ { "id": "go", "kind": "agent", "value": { "intent": "track_order" }, "label": "Track my order" } ] },
+    "c3": { "type": "button", "props": { "label": "Talk to a human", "variant": "ghost" }, "actions": [ { "id": "go", "kind": "agent", "value": { "intent": "handoff" }, "label": "Talk to a human" } ] }
+  },
+  "fallbackText": "You can ask: Show me sales · Track my order · Talk to a human"
+}

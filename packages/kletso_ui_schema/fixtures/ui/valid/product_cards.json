@@ -1,0 +1,17 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8PRODUCTS01",
+  "root": "wrap",
+  "components": {
+    "wrap": { "type": "column", "props": { "children": ["intro", "cards"], "gap": "md" } },
+    "intro": { "type": "text", "props": { "text": "Three picks under ₹2,000:", "style": "body" } },
+    "cards": { "type": "carousel", "props": { "children": ["p1", "p2", "p3"] } },
+    "p1": { "type": "acme.productCard", "props": { "sku": "SKU-1001", "name": "Trail Runner 2", "price": 1899, "currency": "INR", "image": "https://cdn.acme.com/p/1001.jpg", "rating": 4.5, "inStock": true },
+      "actions": [ { "id": "view", "kind": "local", "name": "open_product", "args": { "sku": "SKU-1001" } }, { "id": "add", "kind": "agent", "value": { "intent": "add_to_cart", "sku": "SKU-1001" }, "label": "Add Trail Runner 2 to cart" } ] },
+    "p2": { "type": "acme.productCard", "props": { "sku": "SKU-1002", "name": "Everyday Tote", "price": 1299, "currency": "INR", "image": "https://cdn.acme.com/p/1002.jpg", "rating": 4.2, "inStock": true },
+      "actions": [ { "id": "view", "kind": "local", "name": "open_product", "args": { "sku": "SKU-1002" } }, { "id": "add", "kind": "agent", "value": { "intent": "add_to_cart", "sku": "SKU-1002" }, "label": "Add Everyday Tote to cart" } ] },
+    "p3": { "type": "acme.productCard", "props": { "sku": "SKU-1003", "name": "Steel Bottle 750", "price": 999, "currency": "INR", "image": "https://cdn.acme.com/p/1003.jpg", "rating": 4.8, "inStock": false },
+      "actions": [ { "id": "view", "kind": "local", "name": "open_product", "args": { "sku": "SKU-1003" } }, { "id": "notify", "kind": "agent", "value": { "intent": "notify_when_in_stock", "sku": "SKU-1003" }, "label": "Notify me about Steel Bottle 750" } ] }
+  },
+  "fallbackText": "Three picks under ₹2,000: Trail Runner 2 (₹1,899), Everyday Tote (₹1,299), Steel Bottle 750 (₹999, out of stock)."
+}

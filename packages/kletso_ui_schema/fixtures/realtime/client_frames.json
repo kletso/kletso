@@ -1,0 +1,17 @@
+[
+  { "t": "auth", "token": "kst_eyJhbGciOiJFZERTQSJ9.eyJzZXMiOiJzZXNfMSJ9.c2ln", "conversationId": "conv_01J8DEMO000001", "after": 41 },
+  { "t": "auth", "token": "kst_eyJhbGciOiJFZERTQSJ9.eyJzZXMiOiJzZXNfMSJ9.c2ln", "after": 0 },
+  { "t": "message", "text": "I need a flight from Tokyo to Osaka tomorrow morning", "value": null, "clientId": "c_01J8CLIENT0001" },
+  { "t": "message", "text": null, "value": { "intent": "select_flight", "flightId": "NH873-2026-09-29" }, "clientId": "c_01J8CLIENT0002" },
+  { "t": "action", "surfaceId": "sfc_01J8FLIGHT0001", "componentId": "select", "actionId": "select", "value": { "intent": "select_flight", "flightId": "NH873-2026-09-29" }, "clientId": "c_01J8CLIENT0003" },
+  { "t": "action", "surfaceId": "sfc_01J8FORM000001", "componentId": "form", "actionId": "submit", "value": { "formId": "f_callback", "values": { "name": "Ada", "email": "ada@example.com", "topic": "billing", "guests": 1, "urgent": false } }, "clientId": "c_01J8CLIENT0004" },
+  { "t": "action", "surfaceId": "sfc_01J8CONFIRM001", "componentId": "confirm", "actionId": "yes", "value": { "toolCallId": "call_01J8CANCEL0001", "approve": true }, "clientId": "c_01J8CLIENT0005" },
+  { "t": "context", "merge": { "orderId": "ORD456" } },
+  { "t": "context", "replace": { "plan": "pro", "orderId": "ORD123" } },
+  { "t": "track", "name": "cart_abandoned", "properties": { "value": 129, "currency": "USD" } },
+  { "t": "track", "name": "app_opened" },
+  { "t": "screen", "name": "checkout" },
+  { "t": "switch", "conversationId": "conv_01J8DEMO000002", "after": 0 },
+  { "t": "typing" },
+  { "t": "ping" }
+]

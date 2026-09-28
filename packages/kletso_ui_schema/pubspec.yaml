@@ -1,0 +1,22 @@
+name: kletso_ui_schema
+description: >-
+  Protocol package for Kletso: JSON Schemas, hand-written Dart models and
+  conformance fixtures for kletso.ui/v1 surfaces, kletso.events/v1 and the
+  realtime frames.
+version: 0.1.0
+repository: https://github.com/kletso/kletso
+issue_tracker: https://github.com/kletso/kletso/issues
+homepage: https://kletso.ai
+topics: [ai, chat, chatbot, sdk, generative-ui]
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  meta: ^1.16.0
+
+dev_dependencies:
+  json_schema: ^5.2.2
+  lints: ^6.0.0
+  test: ^1.25.6

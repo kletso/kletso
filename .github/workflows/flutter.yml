@@ -1,0 +1,22 @@
+name: flutter
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed packages example
+      - run: flutter analyze --fatal-infos --fatal-warnings packages example
+      - run: dart test
+        working-directory: packages/kletso_ui_schema
+      - run: dart test
+        working-directory: packages/kletso_core
+      - run: flutter test
+        working-directory: packages/kletso_flutter
+      - run: flutter build web --wasm
+        working-directory: example/acme_shop

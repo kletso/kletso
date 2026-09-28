@@ -1,0 +1,7 @@
+{
+  "schema": "kletso.ui/v2",
+  "surfaceId": "sfc_01J8SCHEMA0001",
+  "root": "a",
+  "components": { "a": { "type": "text", "props": { "text": "from the future" } } },
+  "fallbackText": "A v2 surface sent to a v1 client."
+}

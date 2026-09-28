@@ -1,0 +1,35 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8FLIGHT0001",
+  "root": "card",
+  "components": {
+    "card": { "type": "card", "props": { "title": { "path": "/flight/title" }, "subtitle": "Tomorrow · Nonstop · Economy", "children": ["hero", "route", "divider", "meta", "actions"] } },
+    "hero": { "type": "image", "props": { "src": "https://cdn.acme.com/flights/nh-873.jpg", "alt": "Airplane at the gate", "aspect": "16:9", "fit": "cover" } },
+    "route": { "type": "row", "props": { "children": ["from", "arrow", "to"], "gap": "md", "align": "center" } },
+    "from": { "type": "column", "props": { "children": ["fromCode", "fromTime"], "gap": "sm" } },
+    "fromCode": { "type": "text", "props": { "text": { "path": "/flight/from/code" }, "style": "title" } },
+    "fromTime": { "type": "text", "props": { "text": { "path": "/flight/from/time" }, "style": "caption", "color": "muted" } },
+    "arrow": { "type": "text", "props": { "text": "→", "style": "title", "color": "muted" } },
+    "to": { "type": "column", "props": { "children": ["toCode", "toTime"], "gap": "sm" } },
+    "toCode": { "type": "text", "props": { "text": { "path": "/flight/to/code" }, "style": "title" } },
+    "toTime": { "type": "text", "props": { "text": { "path": "/flight/to/time" }, "style": "caption", "color": "muted" } },
+    "divider": { "type": "divider" },
+    "meta": { "type": "row", "props": { "children": ["airline", "status", "price"], "gap": "md", "align": "spaceBetween" } },
+    "airline": { "type": "text", "props": { "text": "ANA NH873", "style": "caption" } },
+    "status": { "type": "badge", "props": { "label": { "path": "/flight/status" }, "tone": "success" } },
+    "price": { "type": "text", "props": { "text": { "path": "/flight/priceLabel" }, "style": "title" } },
+    "actions": { "type": "row", "props": { "children": ["select", "details"], "gap": "sm" } },
+    "select": { "type": "button", "props": { "label": "Select flight", "variant": "primary" }, "actions": [ { "id": "select", "kind": "agent", "value": { "intent": "select_flight", "flightId": "NH873-2026-09-29" }, "label": "Select ANA NH873" } ] },
+    "details": { "type": "button", "props": { "label": "Details", "variant": "secondary" }, "actions": [ { "id": "details", "kind": "url", "url": "https://acme.com/flights/NH873" } ] }
+  },
+  "data": {
+    "flight": {
+      "title": "Tokyo → Osaka",
+      "from": { "code": "HND", "time": "08:15" },
+      "to": { "code": "ITM", "time": "09:25" },
+      "status": "On time",
+      "priceLabel": "¥14,800"
+    }
+  },
+  "fallbackText": "ANA NH873 Tokyo (HND 08:15) → Osaka (ITM 09:25), ¥14,800, on time. Select flight or view details at https://acme.com/flights/NH873"
+}

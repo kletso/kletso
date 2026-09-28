@@ -1,0 +1,11 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8CYCLE00001",
+  "root": "a",
+  "components": {
+    "a": { "type": "column", "props": { "children": ["b"] } },
+    "b": { "type": "row", "props": { "children": ["c"] } },
+    "c": { "type": "card", "props": { "title": "Loop", "children": ["a"] } }
+  },
+  "fallbackText": "A surface that references itself."
+}

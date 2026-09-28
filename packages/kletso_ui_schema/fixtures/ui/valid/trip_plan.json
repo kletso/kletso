@@ -1,0 +1,30 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8TRIP000001",
+  "root": "card",
+  "components": {
+    "card": { "type": "card", "props": { "title": "Osaka trip · 29 Sep", "children": ["progress", "tabs"] } },
+    "progress": { "type": "progress", "props": { "value": { "path": "/plan/progress" }, "label": "Booking progress", "detail": { "path": "/plan/detail" }, "tone": "success" } },
+    "tabs": { "type": "tabs", "props": { "initial": "t_steps", "items": [
+      { "id": "t_steps", "label": "Timeline", "icon": "clock", "children": ["steps"] },
+      { "id": "t_faq", "label": "Details", "icon": "info", "children": ["faq"] },
+      { "id": "t_rate", "label": "Feedback", "icon": "star", "children": ["rate", "rateBtn"] }
+    ] } },
+    "steps": { "type": "steps", "props": { "orientation": "vertical", "items": [
+      { "id": "s1", "title": "Flight selected", "subtitle": "ANA NH873 · 08:15", "status": "done", "timestamp": "Today 12:01" },
+      { "id": "s2", "title": "Hotel booked", "subtitle": "Shibuya Grand · 2 nights", "status": "done", "timestamp": "Today 12:04" },
+      { "id": "s3", "title": "Payment", "subtitle": "Waiting for confirmation", "status": "current" },
+      { "id": "s4", "title": "Tickets issued", "status": "upcoming" }
+    ] } },
+    "faq": { "type": "accordion", "props": { "items": [
+      { "id": "a1", "title": "Baggage allowance", "markdown": "**23 kg** checked + 7 kg cabin. Extra bags from ¥3,000 via [ANA](https://acme.com/ana-baggage).", "expanded": true },
+      { "id": "a2", "title": "Cancellation policy", "markdown": "Free until 24 h before departure, then 50 %." },
+      { "id": "a3", "title": "Hotel check-in", "children": ["checkin"] }
+    ] } },
+    "checkin": { "type": "text", "props": { "text": "From 15:00. Early check-in on request." } },
+    "rate": { "type": "rating", "props": { "value": 4, "max": 5, "count": 128, "label": "Shibuya Grand Hotel" } },
+    "rateBtn": { "type": "button", "props": { "label": "Change hotel", "variant": "secondary" }, "actions": [ { "id": "change", "kind": "agent", "value": { "intent": "change_hotel" }, "label": "Change hotel" } ] }
+  },
+  "data": { "plan": { "progress": 0.5, "detail": "2 of 4 steps done" } },
+  "fallbackText": "Osaka trip 29 Sep: flight and hotel done, payment pending, tickets upcoming. Baggage 23 kg + 7 kg; free cancellation until 24 h before."
+}

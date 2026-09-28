@@ -1,0 +1,7 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8NOROOT0001",
+  "root": "nope",
+  "components": { "a": { "type": "text", "props": { "text": "orphan" } } },
+  "fallbackText": "The root points nowhere."
+}

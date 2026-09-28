@@ -1,0 +1,142 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8DEPTH00001",
+  "root": "n0",
+  "components": {
+    "n0": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n1"
+        ]
+      }
+    },
+    "n1": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n2"
+        ]
+      }
+    },
+    "n2": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n3"
+        ]
+      }
+    },
+    "n3": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n4"
+        ]
+      }
+    },
+    "n4": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n5"
+        ]
+      }
+    },
+    "n5": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n6"
+        ]
+      }
+    },
+    "n6": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n7"
+        ]
+      }
+    },
+    "n7": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n8"
+        ]
+      }
+    },
+    "n8": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n9"
+        ]
+      }
+    },
+    "n9": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n10"
+        ]
+      }
+    },
+    "n10": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n11"
+        ]
+      }
+    },
+    "n11": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n12"
+        ]
+      }
+    },
+    "n12": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n13"
+        ]
+      }
+    },
+    "n13": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n14"
+        ]
+      }
+    },
+    "n14": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n15"
+        ]
+      }
+    },
+    "n15": {
+      "type": "column",
+      "props": {
+        "children": [
+          "n16"
+        ]
+      }
+    },
+    "n16": {
+      "type": "text",
+      "props": {
+        "text": "leaf at depth 17"
+      }
+    }
+  },
+  "fallbackText": "A surface nested 17 levels deep."
+}

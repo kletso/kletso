@@ -1,0 +1,38 @@
+name: kletso_flutter
+description: >-
+  Embeddable Kletso AI chat for Flutter: streaming chat widget, launcher,
+  server-driven UI (kletso.ui/v1) with host-registered components and the
+  Kletso design tokens as a ThemeExtension. Pure Dart, Wasm-ready.
+version: 0.1.0
+repository: https://github.com/kletso/kletso
+issue_tracker: https://github.com/kletso/kletso/issues
+homepage: https://kletso.ai
+topics: [ai, chat, chatbot, sdk, generative-ui]
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kletso_core: ^0.1.0
+  kletso_ui_schema: ^0.1.0
+  meta: ^1.16.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: Plus Jakarta Sans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700

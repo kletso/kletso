@@ -1,0 +1,10 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8DANGLING01",
+  "root": "root",
+  "components": {
+    "root": { "type": "column", "props": { "children": ["ok", "ghost"] } },
+    "ok": { "type": "text", "props": { "text": "I exist." } }
+  },
+  "fallbackText": "I exist. (A child was missing.)"
+}

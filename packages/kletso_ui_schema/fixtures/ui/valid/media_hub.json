@@ -1,0 +1,24 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8MEDIA00001",
+  "root": "card",
+  "components": {
+    "card": { "type": "card", "props": { "title": "Your order is on its way", "subtitle": "ORD-4521 · arriving today", "children": ["map", "eta", "video", "audio", "rating"] } },
+    "map": { "type": "map", "props": {
+      "title": "Courier location",
+      "center": { "lat": 12.9716, "lng": 77.5946 }, "zoom": 12, "aspect": "16:9",
+      "markers": [
+        { "id": "courier", "lat": 12.9352, "lng": 77.6245, "label": "Courier", "tone": "info" },
+        { "id": "home", "lat": 12.9716, "lng": 77.5946, "label": "You", "tone": "success", "actions": [ { "id": "nav", "kind": "url", "url": "https://maps.google.com/?q=12.9716,77.5946" } ] },
+        { "id": "hub", "lat": 13.0100, "lng": 77.5500, "label": "Hub", "tone": "neutral" }
+      ],
+      "route": [ { "lat": 13.0100, "lng": 77.5500 }, { "lat": 12.9900, "lng": 77.5800 }, { "lat": 12.9352, "lng": 77.6245 }, { "lat": 12.9716, "lng": 77.5946 } ] },
+      "actions": [ { "id": "open", "kind": "url", "url": "https://maps.google.com/?q=12.9352,77.6245" } ] },
+    "eta": { "type": "countdown", "props": { "endsAt": "2026-09-01T00:00:00Z", "label": "Estimated arrival in", "expiredLabel": "Arriving now", "tone": "info" } },
+    "video": { "type": "video", "props": { "src": "https://cdn.acme.com/help/unboxing.mp4", "poster": "https://cdn.acme.com/help/unboxing.jpg", "title": "How to set up your Trail Runner 2", "durationSeconds": 94, "aspect": "16:9" } },
+    "audio": { "type": "audio", "props": { "src": "https://cdn.acme.com/help/care-tips.mp3", "title": "Care tips (2 min)", "subtitle": "Acme support · audio note", "durationSeconds": 122, "transcript": "Wash cold, air dry, re-proof every 20 wears." } },
+    "rating": { "type": "rating", "props": { "value": 0, "max": 5, "label": "Rate this delivery", "interactive": true },
+      "actions": [ { "id": "rate", "kind": "agent", "value": { "intent": "rate_delivery", "orderId": "ORD-4521" }, "label": "Rated the delivery" } ] }
+  },
+  "fallbackText": "Order ORD-4521 is arriving today; the courier is near Koramangala. Setup video: https://cdn.acme.com/help/unboxing.mp4. Rate the delivery when it arrives."
+}

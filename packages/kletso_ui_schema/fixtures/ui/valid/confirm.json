@@ -1,0 +1,18 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8CONFIRM001",
+  "root": "confirm",
+  "components": {
+    "confirm": { "type": "confirm", "props": {
+      "title": "Cancel order ORD-4521?",
+      "message": "This refunds ₹3,499 to the original payment method within 5–7 days. The order cannot be restored.",
+      "confirmLabel": "Yes, cancel order",
+      "cancelLabel": "Keep order",
+      "toolCallId": "call_01J8CANCEL0001" },
+      "actions": [
+        { "id": "yes", "kind": "confirm", "toolCallId": "call_01J8CANCEL0001", "approve": true },
+        { "id": "no", "kind": "confirm", "toolCallId": "call_01J8CANCEL0001", "approve": false }
+      ] }
+  },
+  "fallbackText": "Cancel order ORD-4521? This refunds ₹3,499 within 5–7 days and cannot be undone. Reply yes to cancel or no to keep the order."
+}

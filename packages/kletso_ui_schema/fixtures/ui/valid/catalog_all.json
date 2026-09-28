@@ -1,0 +1,32 @@
+{
+  "schema": "kletso.ui/v1",
+  "surfaceId": "sfc_01J8CATALOG001",
+  "root": "root",
+  "components": {
+    "root": { "type": "column", "props": { "children": ["hdr", "md", "list", "table", "inputs", "states", "links", "wf"], "gap": "lg" } },
+    "hdr": { "type": "row", "props": { "children": ["avatar", "title", "badge"], "gap": "sm", "align": "center" } },
+    "avatar": { "type": "avatar", "props": { "initials": "KL", "size": "md" } },
+    "title": { "type": "text", "props": { "text": "Order ORD-4521", "style": "title" } },
+    "badge": { "type": "badge", "props": { "label": "Shipped", "tone": "success" } },
+    "md": { "type": "markdown", "props": { "markdown": "**Two items** are on the way. Track them with the carrier or see the [return policy](https://acme.com/returns)." } },
+    "list": { "type": "list", "props": { "items": [
+      { "id": "i1", "title": "Trail Runner 2", "subtitle": "Size 42 · ₹1,899", "leading": { "image": "https://cdn.acme.com/p/1001.jpg" }, "trailing": { "badge": "1", "tone": "neutral" }, "actions": [ { "id": "open", "kind": "local", "name": "open_product", "args": { "sku": "SKU-1001" } } ] },
+      { "id": "i2", "title": "Everyday Tote", "subtitle": "Sand · ₹1,299", "leading": { "icon": "shopping_bag" }, "trailing": { "text": "₹1,299" } }
+    ] } },
+    "table": { "type": "table", "props": { "caption": "Shipment timeline", "columns": [ { "key": "when", "label": "When" }, { "key": "what", "label": "Status" }, { "key": "where", "label": "Location", "align": "end" } ],
+      "rows": [ { "when": "Sep 26", "what": "Picked up", "where": "Pune" }, { "when": "Sep 27", "what": "In transit", "where": "Mumbai hub" }, { "when": "Sep 28", "what": "Out for delivery", "where": "Bengaluru" } ] } },
+    "inputs": { "type": "column", "props": { "children": ["input", "select", "img"], "gap": "md" } },
+    "input": { "type": "input", "props": { "name": "otp", "kind": "number", "label": "Delivery OTP", "placeholder": "6 digits" } },
+    "select": { "type": "select", "props": { "name": "slot", "label": "Delivery slot", "options": [ { "value": "am", "label": "Morning" }, { "value": "pm", "label": "Afternoon" } ], "multiple": false } },
+    "img": { "type": "image", "props": { "src": "https://cdn.acme.com/maps/route-4521.png", "alt": "Route map", "aspect": "4:3", "fit": "contain" } },
+    "states": { "type": "row", "props": { "children": ["loading", "error", "div"], "gap": "md" } },
+    "loading": { "type": "loading", "props": { "label": "Checking with the carrier…" } },
+    "error": { "type": "error", "props": { "message": "Carrier API timed out", "retryable": true } },
+    "div": { "type": "divider" },
+    "links": { "type": "row", "props": { "children": ["link", "btn"], "gap": "sm" } },
+    "link": { "type": "link", "props": { "label": "Carrier tracking page", "url": "https://track.carrier.example/4521" } },
+    "btn": { "type": "button", "props": { "label": "Report a problem", "variant": "destructive", "icon": "flag", "disabled": false }, "actions": [ { "id": "report", "kind": "agent", "value": { "intent": "report_problem", "orderId": "ORD-4521" }, "label": "Report a problem" } ] },
+    "wf": { "type": "button", "props": { "label": "Reschedule delivery", "variant": "secondary" }, "actions": [ { "id": "run", "kind": "workflow", "workflowId": "wf_reschedule", "input": { "orderId": "ORD-4521" } } ] }
+  },
+  "fallbackText": "Order ORD-4521 has shipped: Trail Runner 2 and Everyday Tote. Picked up Sep 26 in Pune, in transit Sep 27, out for delivery Sep 28 in Bengaluru. Track at https://track.carrier.example/4521"
+}

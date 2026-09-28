@@ -1,0 +1,5 @@
+build/
+coverage/
+.dart_tool/
+pubspec.lock
+test/goldens/failures/
