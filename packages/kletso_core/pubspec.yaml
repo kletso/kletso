@@ -1,9 +1,7 @@
 name: kletso_core
 description: >-
-  Pure-Dart client for Kletso: sessions, realtime connection (WebSocket / SSE)
-  with reconnect and replay, conversation state and typed events. No Flutter,
-  no platform channels, Wasm-clean.
-version: 0.2.0
+  Kletso client for Dart and Flutter: sessions, realtime chat with typed surfaces, actions, context, triggers, voice and avatar state. Bring your own model key.
+version: 0.2.1
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai

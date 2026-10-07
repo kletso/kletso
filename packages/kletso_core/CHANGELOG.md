@@ -1,3 +1,7 @@
+## 0.2.1 — 2026-10-07
+
+- Shorter pubspec description (pub.dev conventions). No code changes.
+
 ## 0.2.0 — 2026-10-07
 
 - Voice: `KletsoClient.voice` (`KletsoVoiceController`: start/stop/commit, push-to-talk, state, captions, interruption), `KletsoAudioIo` (plug a microphone/speaker implementation such as `package:kletso_voice`), binary audio over the WebSocket transport and connection (`supportsBinary`, `audio` stream, `sendAudio`), `KletsoVoiceInfo` in the session bootstrap (`voiceEnabled`, `pushToTalk`).

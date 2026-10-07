@@ -1,3 +1,7 @@
+## 0.2.1 — 2026-10-07
+
+- Shorter pubspec description (pub.dev conventions). No code changes.
+
 ## 0.2.0 — %s
 
 - Voice UI (D78–D83): mic button in the composer, `KletsoVoiceButton`, `KletsoVoiceSheet` (avatar, captions, surfaces, mute / type instead / End, push-to-talk), `KletsoClientAvatar` binding (mood rules, `avatar.mood`, lip-sync level). Install `package:kletso_voice` for microphone and speaker.

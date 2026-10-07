@@ -1,9 +1,7 @@
 name: kletso_voice
 description: >-
-  Microphone and speaker for Kletso voice sessions: PCM capture (record on
-  Android/iOS/desktop, Web Audio on the web) and low-latency playback. One
-  line installs it into KletsoClient; the chat widgets then offer a mic button.
-version: 0.1.0
+  Microphone and speaker for Kletso voice sessions: PCM capture on mobile, desktop and web (Wasm-safe) plus low-latency playback, installed in one line.
+version: 0.1.1
 homepage: https://kletso.ai
 
 repository: https://github.com/kletso/kletso
