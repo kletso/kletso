@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kletso_core/kletso_core.dart';
 
+import '../avatar/client_avatar.dart';
 import '../listenable_adapter.dart';
 import '../markdown/plain_renderer.dart';
 import '../markdown/renderer.dart';
 import '../theme/kletso_theme.dart';
+import '../voice/voice_button.dart';
+import '../voice/voice_sheet.dart';
 import 'bubbles.dart';
 import 'chrome.dart';
 import 'conversation_list.dart';
@@ -28,6 +31,7 @@ final class KletsoChat extends StatefulWidget {
     this.onClose,
     this.emptyStateText,
     this.composerHint = 'Message…',
+    this.showVoiceButton = true,
   });
 
   /// The client; `null` uses `Kletso.instance`.
@@ -51,6 +55,11 @@ final class KletsoChat extends StatefulWidget {
   /// Composer placeholder.
   final String composerHint;
 
+  /// Show the microphone when the agent offers voice and audio is installed
+  /// (`KletsoVoice.install` from `package:kletso_voice`, or a host
+  /// `KletsoAudioIo`).
+  final bool showVoiceButton;
+
   @override
   State<KletsoChat> createState() => _KletsoChatState();
 }
@@ -62,6 +71,7 @@ final class _KletsoChatState extends State<KletsoChat> {
   late KletsoListenable<bool> _typing;
   late KletsoListenable<KletsoConversation?> _active;
   late KletsoListenable<KletsoSessionBootstrap?> _session;
+  late KletsoClientAvatar _avatar;
   final ScrollController _scroll = ScrollController();
   bool _showPill = false;
   int _lastCount = 0;
@@ -83,6 +93,7 @@ final class _KletsoChatState extends State<KletsoChat> {
     _typing = client.agentTyping.asFlutter();
     _active = client.activeConversation.asFlutter();
     _session = client.session.asFlutter();
+    _avatar = KletsoClientAvatar(client);
     _lastCount = client.messages.value.length;
   }
 
@@ -94,7 +105,16 @@ final class _KletsoChatState extends State<KletsoChat> {
     _typing.dispose();
     _active.dispose();
     _session.dispose();
+    _avatar.dispose();
   }
+
+  Future<void> _openVoice(BuildContext context) => showKletsoVoiceSheet(
+    context,
+    client: _client,
+    avatar: _avatar,
+    theme: widget.theme,
+    markdownRenderer: widget.markdownRenderer,
+  );
 
   @override
   void didUpdateWidget(KletsoChat old) {
@@ -305,6 +325,7 @@ final class _KletsoChatState extends State<KletsoChat> {
                                       client: _client,
                                       markdownRenderer: widget.markdownRenderer,
                                       showAvatar: !sameAuthorAsPrev,
+                                      avatarController: _avatar.controller,
                                     ),
                             );
                           },
@@ -325,6 +346,17 @@ final class _KletsoChatState extends State<KletsoChat> {
                 ),
                 KletsoComposer(
                   onSend: _send,
+                  leading:
+                      widget.showVoiceButton &&
+                          !closed &&
+                          !handedOff &&
+                          kletsoVoiceAvailable(_client)
+                      ? KletsoVoiceButton(
+                          enabled:
+                              _connection.value == KletsoConnectionState.open,
+                          onPressed: () => unawaited(_openVoice(context)),
+                        )
+                      : null,
                   enabled: _client.isAuthenticated && !closed,
                   hintText: closed
                       ? 'This conversation is closed'

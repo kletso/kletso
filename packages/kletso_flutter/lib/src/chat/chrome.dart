@@ -66,10 +66,14 @@ final class KletsoComposer extends StatefulWidget {
     this.enabled = true,
     this.hintText = 'Message…',
     this.onTyping,
+    this.leading,
   });
 
   /// Called with the trimmed text.
   final ValueChanged<String> onSend;
+
+  /// Optional button before the text field (the microphone).
+  final Widget? leading;
 
   /// Disable while offline or handed off.
   final bool enabled;
@@ -126,6 +130,10 @@ final class _KletsoComposerState extends State<KletsoComposer> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
+          if (widget.leading != null) ...<Widget>[
+            widget.leading!,
+            const SizedBox(width: 8),
+          ],
           Expanded(
             child: TextField(
               controller: _controller,

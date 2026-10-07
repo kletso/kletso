@@ -293,6 +293,102 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "voice.started"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/voiceStarted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "voice.state"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/voiceState"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "voice.transcript"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/voiceTranscript"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "voice.interrupted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/voiceInterrupted"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "voice.ended"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/voiceEnded"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "avatar.mood"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/avatarMood"
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -380,6 +476,13 @@
         "value": {},
         "clientId": {
           "type": "string"
+        },
+        "modality": {
+          "enum": [
+            "text",
+            "voice"
+          ],
+          "description": "How the message was produced; absent means text."
         }
       }
     },
@@ -395,6 +498,13 @@
         },
         "text": {
           "type": "string"
+        },
+        "modality": {
+          "enum": [
+            "text",
+            "voice"
+          ],
+          "description": "How the message was produced; absent means text."
         }
       }
     },
@@ -445,6 +555,13 @@
             "error",
             "cancelled"
           ]
+        },
+        "modality": {
+          "enum": [
+            "text",
+            "voice"
+          ],
+          "description": "How the message was produced; absent means text."
         }
       }
     },
@@ -710,6 +827,150 @@
         "data": {
           "type": "object",
           "description": "Opaque host data (deep-link payload etc.)."
+        }
+      }
+    },
+    "voiceStarted": {
+      "type": "object",
+      "description": "A voice session opened on this conversation.",
+      "required": [
+        "voiceSessionId"
+      ],
+      "properties": {
+        "voiceSessionId": {
+          "type": "string",
+          "pattern": "^vs_[A-Za-z0-9]+$"
+        },
+        "model": {
+          "type": "string"
+        },
+        "voice": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "maxSeconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "idleSeconds": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "voiceState": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "listening",
+            "thinking",
+            "speaking",
+            "idle"
+          ]
+        }
+      }
+    },
+    "voiceTranscript": {
+      "type": "object",
+      "description": "What the end user said, as transcribed; final transcripts also become a user message.",
+      "required": [
+        "text",
+        "final"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "user"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "final": {
+          "type": "boolean"
+        }
+      }
+    },
+    "voiceInterrupted": {
+      "type": "object",
+      "description": "The user spoke while the assistant was speaking; clients flush their player.",
+      "required": [
+        "itemId"
+      ],
+      "properties": {
+        "itemId": {
+          "type": "string"
+        },
+        "audioEndMs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "voiceEnded": {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "enum": [
+            "user",
+            "idle",
+            "limit",
+            "error",
+            "not_configured"
+          ]
+        },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "audioInSeconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "audioOutSeconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "costMicros": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "avatarMood": {
+      "type": "object",
+      "description": "Mood for the avatar. Unknown moods render as neutral.",
+      "required": [
+        "mood"
+      ],
+      "properties": {
+        "mood": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "source": {
+          "enum": [
+            "rule",
+            "agent",
+            "heuristic"
+          ]
+        },
+        "ttlMs": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     }

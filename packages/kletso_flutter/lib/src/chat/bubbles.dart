@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kletso_core/kletso_core.dart';
 
+import '../avatar/avatar_controller.dart';
+import '../avatar/kletso_avatar.dart';
 import '../markdown/renderer.dart';
 import '../registry/ui_bindings.dart';
 import '../surface/surface_view.dart';
@@ -74,6 +76,7 @@ final class KletsoBotBubble extends StatelessWidget {
     super.key,
     this.client,
     this.showAvatar = true,
+    this.avatarController,
   });
 
   /// The message.
@@ -87,6 +90,9 @@ final class KletsoBotBubble extends StatelessWidget {
 
   /// Whether to draw the avatar dot.
   final bool showAvatar;
+
+  /// Drives the small avatar's mood; `null` shows a static neutral face.
+  final KletsoAvatarController? avatarController;
 
   @override
   Widget build(BuildContext context) {
@@ -160,15 +166,10 @@ final class KletsoBotBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           if (showAvatar) ...<Widget>[
-            Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                color: t.primary,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: Icon(Icons.chat_bubble, size: 12, color: t.onPrimary),
+            KletsoAvatar(
+              controller: avatarController,
+              size: 24,
+              animate: false,
             ),
             const SizedBox(width: 8),
           ],

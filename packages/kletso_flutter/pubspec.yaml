@@ -3,7 +3,7 @@ description: >-
   Embeddable Kletso AI chat for Flutter: streaming chat widget, launcher,
   server-driven UI (kletso.ui/v1) with host-registered components and the
   Kletso design tokens as a ThemeExtension. Pure Dart, Wasm-ready.
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai
@@ -17,8 +17,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  kletso_core: ^0.1.0
-  kletso_ui_schema: ^0.1.0
+  kletso_core: ^0.2.0
+  kletso_ui_schema: ^0.2.0
   meta: ^1.16.0
 
 dev_dependencies:

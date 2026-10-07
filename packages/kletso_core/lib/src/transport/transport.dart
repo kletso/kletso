@@ -80,6 +80,18 @@ abstract interface class KletsoSocket {
   /// longer usable.
   Future<void> send(KletsoClientFrame frame);
 
+  /// Whether this socket can carry voice audio (binary frames, D79). SSE
+  /// cannot; the WebSocket and fake transports can.
+  bool get supportsBinary;
+
+  /// Audio frames from the server (assistant speech). Empty when
+  /// [supportsBinary] is `false`. Closes with [frames].
+  Stream<KletsoAudioFrame> get audio;
+
+  /// Sends microphone audio. Throws `KletsoNetworkException` when the socket
+  /// cannot carry binary frames or is closed.
+  Future<void> sendAudio(KletsoAudioFrame frame);
+
   /// Closes the socket; [code] follows WebSocket semantics.
   Future<void> close([int code = KletsoCloseCodes.normal, String reason = '']);
 }

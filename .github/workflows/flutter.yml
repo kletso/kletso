@@ -18,3 +18,5 @@ jobs:
         working-directory: packages/kletso_core
       - run: flutter test
         working-directory: packages/kletso_flutter
+      - run: flutter test
+        working-directory: packages/kletso_voice

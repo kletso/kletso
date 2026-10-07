@@ -79,6 +79,24 @@ abstract final class KletsoEventTypes {
   /// chat messages; may arrive live or inside a push payload.
   static const String appNotify = 'app.notify';
 
+  /// A voice session opened on the conversation.
+  static const String voiceStarted = 'voice.started';
+
+  /// The voice session changed state (listening, thinking, speaking, idle).
+  static const String voiceState = 'voice.state';
+
+  /// Transcript of what the user said (partial or final).
+  static const String voiceTranscript = 'voice.transcript';
+
+  /// The user interrupted the assistant; clients flush their player.
+  static const String voiceInterrupted = 'voice.interrupted';
+
+  /// The voice session ended.
+  static const String voiceEnded = 'voice.ended';
+
+  /// A mood for the avatar (rule, agent or heuristic).
+  static const String avatarMood = 'avatar.mood';
+
   /// A turn-level error.
   static const String error = 'error';
 }
@@ -107,11 +125,13 @@ sealed class KletsoEventPayload {
           text: optionalString(d, 'text'),
           value: d['value'],
           clientId: optionalString(d, 'clientId'),
+          modality: KletsoMessageModality.parse(optionalString(d, 'modality')),
         );
       case KletsoEventTypes.messageDelta:
         return KletsoMessageDelta(
           messageId: optionalString(d, 'messageId') ?? '',
           text: optionalString(d, 'text') ?? '',
+          modality: KletsoMessageModality.parse(optionalString(d, 'modality')),
         );
       case KletsoEventTypes.messageCompleted:
         final usage = optionalMap(d, 'usage') ?? const <String, Object?>{};
@@ -127,6 +147,7 @@ sealed class KletsoEventPayload {
           finishReason: KletsoFinishReason.parse(
             optionalString(d, 'finishReason'),
           ),
+          modality: KletsoMessageModality.parse(optionalString(d, 'modality')),
         );
       case KletsoEventTypes.toolStarted:
         return KletsoToolStarted(
@@ -218,6 +239,46 @@ sealed class KletsoEventPayload {
           imageUrl: optionalString(d, 'imageUrl'),
           data: freezeMap(optionalMap(d, 'data')),
         );
+      case KletsoEventTypes.voiceStarted:
+        final limits = optionalMap(d, 'limits') ?? const <String, Object?>{};
+        return KletsoVoiceStarted(
+          voiceSessionId: optionalString(d, 'voiceSessionId') ?? '',
+          model: optionalString(d, 'model'),
+          voice: optionalString(d, 'voice'),
+          maxSeconds: optionalInt(limits, 'maxSeconds'),
+          idleSeconds: optionalInt(limits, 'idleSeconds'),
+        );
+      case KletsoEventTypes.voiceState:
+        return KletsoVoiceStateEvent(
+          KletsoVoiceState.parse(optionalString(d, 'state')),
+        );
+      case KletsoEventTypes.voiceTranscript:
+        return KletsoVoiceTranscript(
+          text: optionalString(d, 'text') ?? '',
+          isFinal: optionalBool(d, 'final') ?? false,
+        );
+      case KletsoEventTypes.voiceInterrupted:
+        return KletsoVoiceInterrupted(
+          itemId: optionalString(d, 'itemId') ?? '',
+          audioEndMs: optionalInt(d, 'audioEndMs'),
+        );
+      case KletsoEventTypes.voiceEnded:
+        final usage = optionalMap(d, 'usage') ?? const <String, Object?>{};
+        return KletsoVoiceEnded(
+          reason: KletsoVoiceEndReason.parse(optionalString(d, 'reason')),
+          audioInSeconds: _optionalDouble(usage, 'audioInSeconds') ?? 0,
+          audioOutSeconds: _optionalDouble(usage, 'audioOutSeconds') ?? 0,
+          costMicros: optionalInt(usage, 'costMicros') ?? 0,
+        );
+      case KletsoEventTypes.avatarMood:
+        return KletsoAvatarMoodEvent(
+          mood: optionalString(d, 'mood') ?? 'neutral',
+          source: KletsoMoodSource.parse(optionalString(d, 'source')),
+          ttl: switch (optionalInt(d, 'ttlMs')) {
+            final int ms when ms > 0 => Duration(milliseconds: ms),
+            _ => null,
+          },
+        );
       case KletsoEventTypes.error:
         return KletsoErrorEvent(
           code: optionalString(d, 'code') ?? 'internal',
@@ -227,6 +288,11 @@ sealed class KletsoEventPayload {
       default:
         return KletsoUnknownEvent(envelope.type, d);
     }
+  }
+
+  static double? _optionalDouble(JsonMap map, String key) {
+    final v = map[key];
+    return v is num ? v.toDouble() : null;
   }
 
   static KletsoSurface? _surfaceOrNull(Object? raw) {
@@ -253,10 +319,14 @@ final class KletsoMessageCreated extends KletsoEventPayload {
     this.text,
     this.value,
     this.clientId,
+    this.modality = KletsoMessageModality.text,
   });
 
   /// New message id.
   final String messageId;
+
+  /// How the message was produced (typed, or spoken in a voice session).
+  final KletsoMessageModality modality;
 
   /// Who authored the message.
   final KletsoRole role;
@@ -274,10 +344,17 @@ final class KletsoMessageCreated extends KletsoEventPayload {
 /// `message.delta`.
 final class KletsoMessageDelta extends KletsoEventPayload {
   /// Creates the payload.
-  const KletsoMessageDelta({required this.messageId, required this.text});
+  const KletsoMessageDelta({
+    required this.messageId,
+    required this.text,
+    this.modality = KletsoMessageModality.text,
+  });
 
   /// Message being streamed.
   final String messageId;
+
+  /// How the message is produced; voice deltas are transcript text.
+  final KletsoMessageModality modality;
 
   /// Text to append.
   final String text;
@@ -296,10 +373,14 @@ final class KletsoMessageCompleted extends KletsoEventPayload {
     this.costMicros = 0,
     this.latencyMs = 0,
     this.finishReason = KletsoFinishReason.stop,
+    this.modality = KletsoMessageModality.text,
   });
 
   /// Message that finished.
   final String messageId;
+
+  /// How the message was produced.
+  final KletsoMessageModality modality;
 
   /// Final full text; clients replace their accumulated deltas with it.
   final String text;
@@ -613,6 +694,113 @@ final class KletsoAppNotification extends KletsoEventPayload {
     if (imageUrl != null) 'imageUrl': imageUrl,
     if (data.isNotEmpty) 'data': data,
   };
+}
+
+/// `voice.started`: a voice session is open on this conversation.
+final class KletsoVoiceStarted extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoVoiceStarted({
+    required this.voiceSessionId,
+    this.model,
+    this.voice,
+    this.maxSeconds,
+    this.idleSeconds,
+  });
+
+  /// Voice session id (`vs_…`).
+  final String voiceSessionId;
+
+  /// Realtime model in use.
+  final String? model;
+
+  /// Voice name in use.
+  final String? voice;
+
+  /// Maximum session length, when limited.
+  final int? maxSeconds;
+
+  /// Silence after which the runtime ends the session, when limited.
+  final int? idleSeconds;
+}
+
+/// `voice.state`.
+final class KletsoVoiceStateEvent extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoVoiceStateEvent(this.state);
+
+  /// The new state.
+  final KletsoVoiceState state;
+}
+
+/// `voice.transcript`: what the user said. Partial transcripts are replaced
+/// by the next one; the final transcript also arrives as a user
+/// `message.created` with `modality: voice`.
+final class KletsoVoiceTranscript extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoVoiceTranscript({required this.text, required this.isFinal});
+
+  /// Transcript text so far.
+  final String text;
+
+  /// Whether this is the final transcript of the utterance.
+  final bool isFinal;
+}
+
+/// `voice.interrupted`: the user started speaking while the assistant was;
+/// clients stop playback and drop buffered audio immediately.
+final class KletsoVoiceInterrupted extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoVoiceInterrupted({required this.itemId, this.audioEndMs});
+
+  /// The assistant audio item that was cut.
+  final String itemId;
+
+  /// How much of it had been played, when known.
+  final int? audioEndMs;
+}
+
+/// `voice.ended`.
+final class KletsoVoiceEnded extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoVoiceEnded({
+    required this.reason,
+    this.audioInSeconds = 0,
+    this.audioOutSeconds = 0,
+    this.costMicros = 0,
+  });
+
+  /// Why it ended.
+  final KletsoVoiceEndReason reason;
+
+  /// Seconds of user audio sent to the model.
+  final double audioInSeconds;
+
+  /// Seconds of assistant audio produced.
+  final double audioOutSeconds;
+
+  /// Cost on the customer's own key, in micro-units of their currency.
+  final int costMicros;
+}
+
+/// `avatar.mood`: a mood for the avatar. Moods are open strings on the wire;
+/// renderers map unknown ones to neutral.
+final class KletsoAvatarMoodEvent extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoAvatarMoodEvent({
+    required this.mood,
+    this.source = KletsoMoodSource.rule,
+    this.ttl,
+  });
+
+  /// Mood name (`happy`, `thinking`, …).
+  final String mood;
+
+  /// Who chose it.
+  final KletsoMoodSource source;
+
+  /// How long it holds before the avatar returns to its default; `null`
+  /// means until the next change.
+  final Duration? ttl;
 }
 
 /// `error`.

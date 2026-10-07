@@ -220,6 +220,17 @@ final class _SseSocket implements KletsoSocket {
   }
 
   @override
+  bool get supportsBinary => false;
+
+  @override
+  Stream<KletsoAudioFrame> get audio => const Stream<KletsoAudioFrame>.empty();
+
+  @override
+  Future<void> sendAudio(KletsoAudioFrame frame) async {
+    throw const KletsoNetworkException('voice needs the WebSocket transport');
+  }
+
+  @override
   Future<void> send(KletsoClientFrame frame) async {
     if (_closed) throw const KletsoNetworkException('stream is closed');
     switch (frame) {
@@ -241,6 +252,19 @@ final class _SseSocket implements KletsoSocket {
       case KletsoAuthFrame() || KletsoTypingFrame() || KletsoPingFrame():
         // Auth is the header; typing/ping have no REST equivalent.
         break;
+      case KletsoVoiceStartFrame() ||
+          KletsoVoiceStopFrame() ||
+          KletsoVoiceCommitFrame() ||
+          KletsoVoicePlayedFrame() ||
+          KletsoVoiceTextFrame():
+        // Voice needs a bidirectional socket (D79); surface it as an error
+        // frame so the voice controller ends the session cleanly.
+        _frames.add(
+          const KletsoErrorFrame(
+            code: 'voice_unavailable',
+            message: 'voice needs the WebSocket transport',
+          ),
+        );
     }
   }
 

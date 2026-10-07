@@ -82,6 +82,24 @@ override any of them by name: the example app swaps `map` for `flutter_map`
 tiles and `video`/`audio` for `video_player`, so the agent emits the same JSON
 and the app decides how rich it looks.
 
+
+### Avatar pictures per mood
+
+With the avatar style set to **Your image** in the dashboard, the host app can
+show its own pictures instead of the mascot, one per mood. `KletsoChat` and
+`KletsoLauncher` pick them up from the session bootstrap automatically; a
+hand-rolled surface does the same through `KletsoClientAvatar`:
+
+```dart
+final avatar = KletsoClientAvatar(client);
+// avatar.imageFor(KletsoAvatarMood.happy) → the URL from the dashboard, or null
+Widget face = avatar.build(size: 96); // crossfades between moods, breathes, bounces while speaking
+```
+
+Or drive `KletsoAvatar` directly with `moodImages` (any `ImageProvider`,
+including animated GIF/WebP). Pictures change at runtime whenever a new
+bootstrap arrives; nothing to restart.
+
 ## Every interaction direction
 
 | direction | how |

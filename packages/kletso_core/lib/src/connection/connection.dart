@@ -64,6 +64,9 @@ final class KletsoConnection {
       StreamController<KletsoException>.broadcast();
   final StreamController<KletsoReadyFrame> _readies =
       StreamController<KletsoReadyFrame>.broadcast();
+  final StreamController<KletsoAudioFrame> _audio =
+      StreamController<KletsoAudioFrame>.broadcast();
+  StreamSubscription<KletsoAudioFrame>? _audioSub;
 
   final Queue<KletsoClientFrame> _queue = Queue<KletsoClientFrame>();
   KletsoSocket? _socket;
@@ -86,6 +89,30 @@ final class KletsoConnection {
 
   /// `ready` frames, including those after a `switch`.
   Stream<KletsoReadyFrame> get readies => _readies.stream;
+
+  /// Assistant audio from the open socket (voice sessions, D79). Frames are
+  /// never queued or replayed: what arrives while disconnected is lost.
+  Stream<KletsoAudioFrame> get audio => _audio.stream;
+
+  /// Whether the open socket can carry voice audio.
+  bool get supportsBinary => _socket?.supportsBinary ?? false;
+
+  /// Sends microphone audio on the open socket; dropped when not open.
+  /// Returns `false` when the frame was not sent.
+  bool sendAudio(KletsoAudioFrame frame) {
+    final socket = _socket;
+    if (socket == null ||
+        _state.value != KletsoConnectionState.open ||
+        !socket.supportsBinary) {
+      return false;
+    }
+    unawaited(
+      socket.sendAudio(frame).catchError((Object e) {
+        _log.debug('audio send failed: $e');
+      }),
+    );
+    return true;
+  }
 
   /// Highest `seq` received for the attached conversation.
   int get lastSeq => _lastSeq;
@@ -188,6 +215,7 @@ final class KletsoConnection {
     await _events.close();
     await _errors.close();
     await _readies.close();
+    await _audio.close();
   }
 
   // ---- loop -----------------------------------------------------------------
@@ -246,6 +274,9 @@ final class KletsoConnection {
         onDone: drained.complete,
         cancelOnError: false,
       );
+      if (socket.supportsBinary) {
+        _audioSub = socket.audio.listen(_audio.add, onError: (Object _) {});
+      }
       final info = await socket.done;
       // Frames buffered before the close are still in flight; apply them
       // before reconnecting or the replay cursor lags and we loop.
@@ -253,6 +284,8 @@ final class KletsoConnection {
       _stopHeartbeat();
       unawaited(_frameSub?.cancel() ?? Future<void>.value());
       _frameSub = null;
+      unawaited(_audioSub?.cancel() ?? Future<void>.value());
+      _audioSub = null;
       _socket = null;
       _log.info('${_transport.name} closed: $info');
       if (!_wantConnected || _disposed) return;

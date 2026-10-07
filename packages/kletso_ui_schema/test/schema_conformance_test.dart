@@ -107,6 +107,58 @@ void main() {
       }
     });
 
+    test('voice_turn events are valid', () {
+      final log = KletsoFixtures.eventsVoiceTurn! as List;
+      for (final e in log) {
+        final r = events.validate(e);
+        expect(
+          r.isValid,
+          isTrue,
+          reason: '${(e as Map)['seq']}: ${r.errors.join('\n')}',
+        );
+      }
+    });
+
+    test('voice and avatar data is validated', () {
+      Map<String, Object?> env(String type, Map<String, Object?> data) =>
+          <String, Object?>{
+            'id': 'evt_1',
+            'seq': 1,
+            'type': type,
+            'ts': '2026-10-02T09:00:00Z',
+            'conversationId': 'conv_1',
+            'data': data,
+          };
+      expect(
+        events.validate(env('voice.state', {'state': 'humming'})).isValid,
+        isFalse,
+      );
+      expect(
+        events.validate(env('voice.ended', {'reason': 'user'})).isValid,
+        isTrue,
+      );
+      expect(
+        events.validate(env('voice.ended', <String, Object?>{})).isValid,
+        isFalse,
+      );
+      expect(
+        events.validate(env('avatar.mood', {'mood': ''})).isValid,
+        isFalse,
+      );
+      expect(
+        events
+            .validate(
+              env('message.delta', {
+                'messageId': 'msg_1',
+                'text': 'x',
+                'modality': 'sms',
+              }),
+            )
+            .isValid,
+        isFalse,
+      );
+    });
+
     test('app.notify data is validated', () {
       Map<String, Object?> env(Map<String, Object?> data) => <String, Object?>{
         'id': 'evt_1',

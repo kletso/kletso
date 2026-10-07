@@ -14,6 +14,18 @@ enum KletsoLauncherPosition {
   bottomLeft,
 }
 
+/// What the floating launcher bubble shows.
+enum KletsoLauncherIcon {
+  /// The default chat bubble icon.
+  chat,
+
+  /// A sparkle icon (`Icons.auto_awesome`).
+  sparkle,
+
+  /// The animated Kletso mascot face ([KletsoAvatar]).
+  mascot,
+}
+
 /// Semantic theme every Kletso widget reads from. Roles map one-to-one to the
 /// `--kl-*` design tokens and to the `theme` object of the session bootstrap
 /// (see `docs/v1/04-ui-protocol.md` §6).
@@ -58,6 +70,7 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
     required this.launcherPosition,
     required this.launcherSize,
     required this.useHostFont,
+    this.launcherIcon = KletsoLauncherIcon.chat,
   });
 
   /// The Kletso light theme from the design tokens.
@@ -140,6 +153,14 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
     final position = launcher is Map && launcher['position'] == 'bottomLeft'
         ? KletsoLauncherPosition.bottomLeft
         : null;
+    final icon = launcher is Map
+        ? switch (launcher['icon']) {
+            'chat' => KletsoLauncherIcon.chat,
+            'sparkle' => KletsoLauncherIcon.sparkle,
+            'mascot' => KletsoLauncherIcon.mascot,
+            _ => null,
+          }
+        : null;
     final family = theme['fontFamily'];
     final primary = color('primary');
     final text = color('text');
@@ -158,6 +179,7 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
       radiusSm: r == null ? null : (r * 0.5).roundToDouble(),
       fontFamily: family is String && family.isNotEmpty ? family : null,
       launcherPosition: position,
+      launcherIcon: icon,
       title: text == null ? null : b.title.copyWith(color: text),
       subtitle: text == null ? null : b.subtitle.copyWith(color: text),
       body: text == null ? null : b.body.copyWith(color: text),
@@ -314,6 +336,9 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
   /// Whether text styles leave `fontFamily` unset to inherit the host font.
   final bool useHostFont;
 
+  /// What the launcher bubble shows.
+  final KletsoLauncherIcon launcherIcon;
+
   /// Border radius helpers.
   BorderRadius get borderRadiusSm => BorderRadius.circular(radiusSm);
 
@@ -392,6 +417,7 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
     KletsoLauncherPosition? launcherPosition,
     double? launcherSize,
     bool? useHostFont,
+    KletsoLauncherIcon? launcherIcon,
   }) => KletsoTheme(
     primary: primary ?? this.primary,
     onPrimary: onPrimary ?? this.onPrimary,
@@ -425,6 +451,7 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
     launcherPosition: launcherPosition ?? this.launcherPosition,
     launcherSize: launcherSize ?? this.launcherSize,
     useHostFont: useHostFont ?? this.useHostFont,
+    launcherIcon: launcherIcon ?? this.launcherIcon,
   );
 
   @override
@@ -466,6 +493,7 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
       launcherPosition: t < 0.5 ? launcherPosition : other.launcherPosition,
       launcherSize: d(launcherSize, other.launcherSize),
       useHostFont: t < 0.5 ? useHostFont : other.useHostFont,
+      launcherIcon: t < 0.5 ? launcherIcon : other.launcherIcon,
     );
   }
 
@@ -504,7 +532,8 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
           code == other.code &&
           launcherPosition == other.launcherPosition &&
           launcherSize == other.launcherSize &&
-          useHostFont == other.useHostFont;
+          useHostFont == other.useHostFont &&
+          launcherIcon == other.launcherIcon;
 
   @override
   int get hashCode => Object.hashAll(<Object?>[
@@ -540,5 +569,6 @@ final class KletsoTheme extends ThemeExtension<KletsoTheme> {
     launcherPosition,
     launcherSize,
     useHostFont,
+    launcherIcon,
   ]);
 }

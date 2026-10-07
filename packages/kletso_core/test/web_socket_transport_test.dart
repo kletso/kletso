@@ -101,11 +101,26 @@ void main() {
     });
     ws.serverText({'t': 'mystery'});
     ws.serverRaw('x' * (256 * 1024 + 1));
+    // Binary frames are voice audio (D79): junk is dropped silently, a valid
+    // audio-out frame arrives on `audio`.
+    final audio = <KletsoAudioFrame>[];
+    socket.audio.listen(audio.add);
     ws._events.add(BinaryDataReceived(Uint8List(3)));
+    ws._events.add(
+      BinaryDataReceived(
+        KletsoAudioFrame(
+          kind: KletsoAudioFrame.audioOut,
+          pcm: Uint8List.fromList(<int>[1, 0, 2, 0]),
+        ).encode(),
+      ),
+    );
     await Future<void>.delayed(Duration.zero);
     expect(frames.map((f) => f.t), ['pong', 'event', 'mystery']);
-    expect(errors, hasLength(4));
+    expect(errors, hasLength(3));
     expect(errors.every((e) => e is KletsoProtocolException), isTrue);
+    expect(socket.supportsBinary, isTrue);
+    expect(audio, hasLength(1));
+    expect(audio.single.pcm, <int>[1, 0, 2, 0]);
     await socket.send(const KletsoPingFrame());
     expect(jsonDecode(ws.sent.last), {'t': 'ping'});
     ws.serverClose(1001, 'deploy');
@@ -269,4 +284,10 @@ final class _NoopSocket implements KletsoSocket {
   Future<void> send(KletsoClientFrame frame) async {}
   @override
   Future<void> close([int code = 1000, String reason = '']) async {}
+  @override
+  bool get supportsBinary => false;
+  @override
+  Stream<KletsoAudioFrame> get audio => const Stream<KletsoAudioFrame>.empty();
+  @override
+  Future<void> sendAudio(KletsoAudioFrame frame) async {}
 }

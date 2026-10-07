@@ -1,0 +1,255 @@
+[
+  {
+    "id": "evt_01J8VOICE00001",
+    "seq": 1,
+    "type": "voice.started",
+    "ts": "2026-10-02T09:00:00.100Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "data": {
+      "voiceSessionId": "vs_01J8VS00000001",
+      "model": "gpt-realtime-2.1",
+      "voice": "marin",
+      "limits": {
+        "maxSeconds": 900,
+        "idleSeconds": 60
+      }
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00002",
+    "seq": 2,
+    "type": "voice.state",
+    "ts": "2026-10-02T09:00:00.200Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "data": {
+      "state": "listening"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00003",
+    "seq": 3,
+    "type": "avatar.mood",
+    "ts": "2026-10-02T09:00:00.300Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "data": {
+      "mood": "listening",
+      "source": "rule"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00004",
+    "seq": 4,
+    "type": "voice.transcript",
+    "ts": "2026-10-02T09:00:00.400Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "role": "user",
+      "text": "Do you have the trail runners in",
+      "final": false
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00005",
+    "seq": 5,
+    "type": "voice.transcript",
+    "ts": "2026-10-02T09:00:00.500Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "role": "user",
+      "text": "Do you have the trail runners in size 42?",
+      "final": true
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00006",
+    "seq": 6,
+    "type": "message.created",
+    "ts": "2026-10-02T09:00:00.600Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "messageId": "msg_01J8VMSG000001",
+      "role": "user",
+      "text": "Do you have the trail runners in size 42?",
+      "modality": "voice"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00007",
+    "seq": 7,
+    "type": "voice.state",
+    "ts": "2026-10-02T09:00:00.700Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "state": "thinking"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00008",
+    "seq": 8,
+    "type": "tool.started",
+    "ts": "2026-10-02T09:00:00.800Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "toolCallId": "call_01J8VCALL00001",
+      "name": "search_products",
+      "args": {
+        "query": "trail runners",
+        "size": 42
+      }
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00009",
+    "seq": 9,
+    "type": "tool.completed",
+    "ts": "2026-10-02T09:00:00.900Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "toolCallId": "call_01J8VCALL00001",
+      "name": "search_products",
+      "durationMs": 412,
+      "result": {
+        "count": 2
+      }
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00010",
+    "seq": 10,
+    "type": "voice.state",
+    "ts": "2026-10-02T09:00:01.000Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "state": "speaking"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00011",
+    "seq": 11,
+    "type": "avatar.mood",
+    "ts": "2026-10-02T09:00:01.100Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "mood": "happy",
+      "source": "heuristic",
+      "ttlMs": 2000
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00012",
+    "seq": 12,
+    "type": "message.created",
+    "ts": "2026-10-02T09:00:01.200Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "messageId": "msg_01J8VMSG000002",
+      "role": "assistant",
+      "text": "",
+      "modality": "voice"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00013",
+    "seq": 13,
+    "type": "message.delta",
+    "ts": "2026-10-02T09:00:01.300Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "messageId": "msg_01J8VMSG000002",
+      "text": "Yes! Two models in 42: ",
+      "modality": "voice"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00014",
+    "seq": 14,
+    "type": "message.delta",
+    "ts": "2026-10-02T09:00:01.400Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "messageId": "msg_01J8VMSG000002",
+      "text": "the Ridge and the Summit. Want to see them?",
+      "modality": "voice"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00015",
+    "seq": 15,
+    "type": "voice.interrupted",
+    "ts": "2026-10-02T09:00:01.500Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "itemId": "item_01J8ITEM00002",
+      "audioEndMs": 1840
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00016",
+    "seq": 16,
+    "type": "message.completed",
+    "ts": "2026-10-02T09:00:01.600Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "messageId": "msg_01J8VMSG000002",
+      "text": "Yes! Two models in 42: the Ridge and the Summit. Want to see them?",
+      "modality": "voice",
+      "usage": {
+        "in": 820,
+        "out": 260
+      },
+      "costMicros": 42880,
+      "latencyMs": 1310,
+      "finishReason": "cancelled"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00017",
+    "seq": 17,
+    "type": "voice.state",
+    "ts": "2026-10-02T09:00:01.700Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "turnId": "trn_01J8TURN000031",
+    "data": {
+      "state": "listening"
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00018",
+    "seq": 18,
+    "type": "voice.ended",
+    "ts": "2026-10-02T09:00:01.800Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "data": {
+      "reason": "user",
+      "usage": {
+        "audioInSeconds": 14.2,
+        "audioOutSeconds": 6.1,
+        "costMicros": 61200
+      }
+    }
+  },
+  {
+    "id": "evt_01J8VOICE00019",
+    "seq": 19,
+    "type": "avatar.mood",
+    "ts": "2026-10-02T09:00:01.900Z",
+    "conversationId": "conv_01J8DEMO000003",
+    "data": {
+      "mood": "neutral",
+      "source": "rule"
+    }
+  }
+]

@@ -68,6 +68,7 @@ void main() {
         launcherPosition: KletsoLauncherPosition.bottomLeft,
         launcherSize: 80,
         useHostFont: true,
+        launcherIcon: KletsoLauncherIcon.mascot,
       );
       expect(b, isNot(equals(a)));
       final mid = a.lerp(b, 0.5);
@@ -80,6 +81,7 @@ void main() {
       expect(a.lerp(b, 0).primary, a.primary);
       expect(a.lerp(b, 1).primary, b.primary);
       expect(a.lerp(b, 1).launcherPosition, b.launcherPosition);
+      expect(a.lerp(b, 1).launcherIcon, KletsoLauncherIcon.mascot);
       expect(a.lerp(null, 0.5), a);
       expect(a.copyWith(), a);
       expect(a.copyWith().hashCode, a.hashCode);
@@ -92,7 +94,7 @@ void main() {
         'text': '#000000',
         'radius': 8,
         'fontFamily': 'Inter',
-        'launcher': {'position': 'bottomLeft'},
+        'launcher': {'position': 'bottomLeft', 'icon': 'mascot'},
         'surface': 'not a colour',
         'background': 12,
       });
@@ -105,9 +107,23 @@ void main() {
       expect(t.radiusSm, 4);
       expect(t.fontFamily, 'Inter');
       expect(t.launcherPosition, KletsoLauncherPosition.bottomLeft);
+      expect(t.launcherIcon, KletsoLauncherIcon.mascot);
       expect(t.surface, KletsoTheme.light().surface);
       expect(t.background, KletsoTheme.light().background);
       expect(KletsoTheme.fromServer(const {}), KletsoTheme.light());
+      expect(
+        KletsoTheme.fromServer({
+          'launcher': {'icon': 'sparkle'},
+        }).launcherIcon,
+        KletsoLauncherIcon.sparkle,
+      );
+      expect(
+        KletsoTheme.fromServer({
+          'launcher': {'icon': 'nonsense'},
+        }).launcherIcon,
+        KletsoTheme.light().launcherIcon,
+        reason: 'unknown icon leaves the base theme unchanged',
+      );
     });
 
     testWidgets(

@@ -66,5 +66,9 @@ Say "flight", "hotel", "products", "sales", "where is my courier" (map/video/aud
 ## 9. Observe state
 `client.messages`, `client.connection`, `client.agentTyping`, `client.conversations`, `client.activeConversation`, `client.session` are `KletsoValueListenable`s (`.asFlutter()` for `ValueListenableBuilder`); `client.events` is a broadcast stream of `KletsoServerEvent | KletsoConnectionChanged | KletsoClientError | KletsoUnknownComponent | KletsoLocalActionRan`.
 
+## 10. Voice and avatar (0.2.0)
+Voice is configured per agent in the dashboard (Agent → Voice, customer's OpenAI key). The chat shows a mic button once the bootstrap says voice is enabled **and** audio is installed: `flutter pub add kletso_voice`, then `KletsoVoice.install(client)` right after `Kletso.init`. Add `RECORD_AUDIO` (Android) / `NSMicrophoneUsageDescription` (iOS, macOS). `client.voice` is a `KletsoVoiceController` (`start`, `stop`, `commit` for push-to-talk, `state`, captions). `KletsoVoiceSheet` is the full-screen voice UI; `KletsoVoiceButton` the compact one.
+The avatar (`KletsoAvatar`, `KletsoClientAvatar`) follows the dashboard's Avatar tab: mascot with colours, or the customer's pictures (`avatar.imageUrl` default + `avatar.images[mood]` per mood, crossfade / breathing / talk bounce handled by the widget), moods from rules (`avatar.mood` events) and lip-sync from the voice level. Pass `moodImages` when you build `KletsoAvatar` yourself; `KletsoClientAvatar` does it from the bootstrap and re-renders when the agent is republished.
+
 ## Don'ts
 No secret keys in the app · don't parse surfaces yourself · don't await `Kletso.instance.open()` inside `initState` · don't register a builder that throws on missing props (use the typed getters' defaults).

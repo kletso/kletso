@@ -21,6 +21,8 @@ final class KletsoFakeScenario {
     this.seedConversationLog = false,
     this.greeting = true,
     this.sampleMedia = false,
+    this.voice = true,
+    this.voiceTranscript = 'Show me products under 2000',
   });
 
   /// Lifelike timings for the example app, no faults.
@@ -30,6 +32,8 @@ final class KletsoFakeScenario {
     this.expireTokenAfterEvents,
     this.duplicateEveryNth,
     this.sampleMedia = true,
+    this.voice = true,
+    this.voiceTranscript = 'Show me products under 2000',
   }) : apiLatency = const Duration(milliseconds: 250),
        thinkingDelay = const Duration(milliseconds: 700),
        deltaDelay = const Duration(milliseconds: 45),
@@ -86,4 +90,12 @@ final class KletsoFakeScenario {
   /// Replace the fixtures' `cdn.acme.com` media URLs with public sample files
   /// so host video/audio players actually play in demos.
   final bool sampleMedia;
+
+  /// Whether the fake agent offers voice. When on, about one second of
+  /// microphone audio counts as the utterance [voiceTranscript], which the
+  /// fake answers aloud (a synthesised tone plus the transcript).
+  final bool voice;
+
+  /// What the fake "hears" the user say.
+  final String voiceTranscript;
 }

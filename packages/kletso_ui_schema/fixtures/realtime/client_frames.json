@@ -13,5 +13,11 @@
   { "t": "screen", "name": "checkout" },
   { "t": "switch", "conversationId": "conv_01J8DEMO000002", "after": 0 },
   { "t": "typing" },
-  { "t": "ping" }
+  { "t": "ping" },
+  { "t": "voice.start", "mode": "vad", "sampleRate": 24000, "clientId": "c_01J8CLIENT0006" },
+  { "t": "voice.start", "mode": "ptt", "sampleRate": 24000, "clientId": "c_01J8CLIENT0007" },
+  { "t": "voice.stop", "reason": "user" },
+  { "t": "voice.commit" },
+  { "t": "voice.played", "itemId": "item_01J8ITEM00001", "ms": 1840 },
+  { "t": "voice.text", "text": "Actually, make that two tickets" }
 ]

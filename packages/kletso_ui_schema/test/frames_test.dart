@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:kletso_ui_schema/kletso_ui_schema.dart';
 import 'package:test/test.dart';
 
@@ -31,7 +33,54 @@ void main() {
       KletsoSwitchFrame,
       KletsoTypingFrame,
       KletsoPingFrame,
+      KletsoVoiceStartFrame,
+      KletsoVoiceStopFrame,
+      KletsoVoiceCommitFrame,
+      KletsoVoicePlayedFrame,
+      KletsoVoiceTextFrame,
     });
+  });
+
+  test('voice frames default and parse their enums', () {
+    final start =
+        KletsoClientFrame.fromJson({'t': 'voice.start', 'clientId': 'c'})
+            as KletsoVoiceStartFrame;
+    expect(start.mode, KletsoVoiceMode.vad);
+    expect(start.sampleRate, 24000);
+    expect(
+      (KletsoClientFrame.fromJson({'t': 'voice.stop', 'reason': 'warp'})
+              as KletsoVoiceStopFrame)
+          .reason,
+      KletsoVoiceStopReason.user,
+    );
+    expect(
+      () => KletsoClientFrame.fromJson({'t': 'voice.played', 'itemId': 'i'}),
+      throwsA(isA<KletsoSchemaException>()),
+    );
+  });
+
+  test('binary audio frames encode, decode and reject junk', () {
+    final pcm = Uint8List.fromList(<int>[0, 0, 0xFF, 0x7F, 0x00, 0x80]);
+    final f = KletsoAudioFrame(kind: KletsoAudioFrame.audioIn, pcm: pcm);
+    final wire = f.encode();
+    expect(wire.first, 0x01);
+    expect(wire.length, 7);
+    final back = KletsoAudioFrame.decode(wire)!;
+    expect(back.kind, KletsoAudioFrame.audioIn);
+    expect(back.pcm, pcm);
+    expect(back.duration.inMicroseconds, 3 * 1000000 ~/ 24000);
+    expect(back.rms, closeTo(0.816, 0.01));
+    expect(KletsoAudioFrame.decode(<int>[]), isNull);
+    expect(KletsoAudioFrame.decode(<int>[0x09, 0, 0]), isNull);
+    expect(KletsoAudioFrame.decode(<int>[0x02, 0]), isNull, reason: 'odd');
+    expect(
+      KletsoAudioFrame.decode(Uint8List(KletsoAudioFrame.maxBytes + 1)),
+      isNull,
+    );
+    expect(
+      KletsoAudioFrame(kind: KletsoAudioFrame.audioOut, pcm: Uint8List(0)).rms,
+      0,
+    );
   });
 
   test('server frame fixtures cover every frame type and round-trip', () {

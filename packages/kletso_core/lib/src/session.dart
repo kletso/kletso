@@ -149,6 +149,8 @@ final class KletsoSessionBootstrap {
     this.theme = const <String, Object?>{},
     this.minClient,
     this.allowedUrlHosts = const <String>[],
+    this.voice = const KletsoVoiceInfo(),
+    this.avatar = const <String, Object?>{},
   });
 
   /// Parses the response body. Throws [KletsoSchemaException] when the
@@ -180,6 +182,10 @@ final class KletsoSessionBootstrap {
             growable: false,
           ) ??
           const <String>[],
+      voice: KletsoVoiceInfo.fromJson(map['voice']),
+      avatar: map['avatar'] is Map
+          ? (map['avatar']! as Map).cast<String, Object?>()
+          : const <String, Object?>{},
     );
   }
 
@@ -204,6 +210,13 @@ final class KletsoSessionBootstrap {
   /// Hosts that `url` actions, links and images may point at.
   final List<String> allowedUrlHosts;
 
+  /// Whether and how the agent speaks (D80).
+  final KletsoVoiceInfo voice;
+
+  /// The agent's avatar configuration (style, colours, moods, rules; D81).
+  /// Raw so the rendering layer can evolve without a protocol change.
+  final JsonMap avatar;
+
   /// Returns a copy with a new [session] (after refresh).
   KletsoSessionBootstrap withSession(KletsoSession session) =>
       KletsoSessionBootstrap(
@@ -214,7 +227,66 @@ final class KletsoSessionBootstrap {
         theme: theme,
         minClient: minClient,
         allowedUrlHosts: allowedUrlHosts,
+        voice: voice,
+        avatar: avatar,
       );
+}
+
+/// Voice capability of the agent, from the session bootstrap. [enabled]
+/// only says the customer switched voice on; whether their key works is
+/// learned when a session starts (`error not_configured`).
+@immutable
+final class KletsoVoiceInfo {
+  /// Creates voice info.
+  const KletsoVoiceInfo({
+    this.enabled = false,
+    this.model,
+    this.voiceName,
+    this.pushToTalk = false,
+    this.maxSeconds,
+    this.idleSeconds,
+  });
+
+  /// Parses the `voice` section; anything missing means voice is off.
+  factory KletsoVoiceInfo.fromJson(Object? json) {
+    if (json is! Map) return const KletsoVoiceInfo();
+    final m = json.cast<String, Object?>();
+    final limits = m['limits'];
+    final l = limits is Map
+        ? limits.cast<String, Object?>()
+        : const <String, Object?>{};
+    return KletsoVoiceInfo(
+      enabled: m['enabled'] == true,
+      model: m['model'] as String?,
+      voiceName: m['voiceName'] as String?,
+      pushToTalk: m['mode'] == 'ptt',
+      maxSeconds: l['maxSeconds'] is num
+          ? (l['maxSeconds']! as num).toInt()
+          : null,
+      idleSeconds: l['idleSeconds'] is num
+          ? (l['idleSeconds']! as num).toInt()
+          : null,
+    );
+  }
+
+  /// Whether the agent offers voice.
+  final bool enabled;
+
+  /// Realtime model name, when known.
+  final String? model;
+
+  /// Voice name, when known.
+  final String? voiceName;
+
+  /// `true` when the agent is configured for push-to-talk instead of
+  /// automatic turn detection.
+  final bool pushToTalk;
+
+  /// Session length limit.
+  final int? maxSeconds;
+
+  /// Silence limit.
+  final int? idleSeconds;
 }
 
 /// Marker so `KletsoEnvironment` shows up in the session request.

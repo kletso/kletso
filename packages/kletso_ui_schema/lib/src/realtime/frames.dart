@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import '../errors.dart';
 import '../events/envelope.dart';
 import '../json_utils.dart';
+import 'binary.dart';
 
 /// WebSocket close codes the runtime uses.
 abstract final class KletsoCloseCodes {
@@ -81,6 +82,25 @@ sealed class KletsoClientFrame {
         return const KletsoTypingFrame();
       case 'ping':
         return const KletsoPingFrame();
+      case 'voice.start':
+        return KletsoVoiceStartFrame(
+          clientId: requireString(map, 'clientId', path),
+          mode: KletsoVoiceMode.parse(optionalString(map, 'mode')),
+          sampleRate: optionalInt(map, 'sampleRate') ?? 24000,
+        );
+      case 'voice.stop':
+        return KletsoVoiceStopFrame(
+          reason: KletsoVoiceStopReason.parse(optionalString(map, 'reason')),
+        );
+      case 'voice.commit':
+        return const KletsoVoiceCommitFrame();
+      case 'voice.played':
+        return KletsoVoicePlayedFrame(
+          itemId: requireString(map, 'itemId', path),
+          ms: requireInt(map, 'ms', path),
+        );
+      case 'voice.text':
+        return KletsoVoiceTextFrame(text: requireString(map, 'text', path));
       default:
         throw KletsoSchemaException(
           'unknown client frame "$t"',
@@ -320,6 +340,135 @@ final class KletsoPingFrame extends KletsoClientFrame {
 
   @override
   JsonMap toJson() => const <String, Object?>{'t': 'ping'};
+}
+
+/// Turn-taking mode of a voice session.
+enum KletsoVoiceMode {
+  /// The model detects when the user starts and stops speaking.
+  vad('vad'),
+
+  /// Push-to-talk: the client sends `voice.commit` when the user releases.
+  ptt('ptt');
+
+  const KletsoVoiceMode(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; anything unrecognised is [vad].
+  static KletsoVoiceMode parse(String? value) =>
+      values.firstWhere((m) => m.wire == value, orElse: () => vad);
+}
+
+/// Why the client stops a voice session.
+enum KletsoVoiceStopReason {
+  /// The user tapped End.
+  user('user'),
+
+  /// The app went to the background.
+  background('background');
+
+  const KletsoVoiceStopReason(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; anything unrecognised is [user].
+  static KletsoVoiceStopReason parse(String? value) =>
+      values.firstWhere((r) => r.wire == value, orElse: () => user);
+}
+
+/// Opens a voice session on the attached conversation. Audio then travels as
+/// binary frames (see [KletsoAudioFrame]).
+final class KletsoVoiceStartFrame extends KletsoClientFrame {
+  /// Creates a voice.start frame.
+  const KletsoVoiceStartFrame({
+    required this.clientId,
+    this.mode = KletsoVoiceMode.vad,
+    this.sampleRate = 24000,
+  });
+
+  /// Client-assigned id for dedupe after reconnects.
+  final String clientId;
+
+  /// Turn-taking mode.
+  final KletsoVoiceMode mode;
+
+  /// Sample rate of the PCM the client sends and expects (24 kHz only).
+  final int sampleRate;
+
+  @override
+  String get t => 'voice.start';
+
+  @override
+  JsonMap toJson() => <String, Object?>{
+    't': t,
+    'mode': mode.wire,
+    'sampleRate': sampleRate,
+    'clientId': clientId,
+  };
+}
+
+/// Ends the voice session.
+final class KletsoVoiceStopFrame extends KletsoClientFrame {
+  /// Creates a voice.stop frame.
+  const KletsoVoiceStopFrame({this.reason = KletsoVoiceStopReason.user});
+
+  /// Why.
+  final KletsoVoiceStopReason reason;
+
+  @override
+  String get t => 'voice.stop';
+
+  @override
+  JsonMap toJson() => <String, Object?>{'t': t, 'reason': reason.wire};
+}
+
+/// Push-to-talk release: the buffered audio is one utterance, answer it.
+final class KletsoVoiceCommitFrame extends KletsoClientFrame {
+  /// Creates a voice.commit frame.
+  const KletsoVoiceCommitFrame();
+
+  @override
+  String get t => 'voice.commit';
+
+  @override
+  JsonMap toJson() => const <String, Object?>{'t': 'voice.commit'};
+}
+
+/// Playback progress of an assistant audio item, so the runtime can cut the
+/// model's transcript where the user interrupted.
+final class KletsoVoicePlayedFrame extends KletsoClientFrame {
+  /// Creates a voice.played frame.
+  const KletsoVoicePlayedFrame({required this.itemId, required this.ms});
+
+  /// Assistant audio item.
+  final String itemId;
+
+  /// Milliseconds of it played so far.
+  final int ms;
+
+  @override
+  String get t => 'voice.played';
+
+  @override
+  JsonMap toJson() => <String, Object?>{'t': t, 'itemId': itemId, 'ms': ms};
+}
+
+/// Typed text during a voice session; routed to the voice model, not the
+/// text agent.
+final class KletsoVoiceTextFrame extends KletsoClientFrame {
+  /// Creates a voice.text frame.
+  const KletsoVoiceTextFrame({required this.text});
+
+  /// The text.
+  final String text;
+
+  @override
+  String get t => 'voice.text';
+
+  @override
+  JsonMap toJson() => <String, Object?>{'t': t, 'text': text};
 }
 
 /// A frame the runtime sends to the client.

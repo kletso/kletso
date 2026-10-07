@@ -80,6 +80,8 @@ final class _WebSocketSocket implements KletsoSocket {
   late final StreamSubscription<WebSocketEvent> _sub;
   final StreamController<KletsoServerFrame> _frames =
       StreamController<KletsoServerFrame>();
+  final StreamController<KletsoAudioFrame> _audio =
+      StreamController<KletsoAudioFrame>();
   final Completer<KletsoCloseInfo> _done = Completer<KletsoCloseInfo>();
   Completer<KletsoReadyFrame>? _ready;
   int _readySeq = 0;
@@ -94,6 +96,12 @@ final class _WebSocketSocket implements KletsoSocket {
   @override
   Future<KletsoCloseInfo> get done => _done.future;
 
+  @override
+  bool get supportsBinary => true;
+
+  @override
+  Stream<KletsoAudioFrame> get audio => _audio.stream;
+
   Future<KletsoReadyFrame> _handshake(KletsoAuthFrame auth) {
     final completer = _ready = Completer<KletsoReadyFrame>();
     _ws.sendText(jsonEncode(auth.toJson()));
@@ -105,10 +113,13 @@ final class _WebSocketSocket implements KletsoSocket {
     switch (event) {
       case TextDataReceived(:final text):
         _onText(text);
-      case BinaryDataReceived():
-        _frames.addError(
-          const KletsoProtocolException('binary frames are not supported'),
-        );
+      case BinaryDataReceived(:final data):
+        // Voice audio (D79). Anything that is not a well-formed audio frame
+        // is dropped silently: audio is best-effort and never replayed.
+        final frame = KletsoAudioFrame.decode(data);
+        if (frame != null && frame.kind == KletsoAudioFrame.audioOut) {
+          _audio.add(frame);
+        }
       case CloseReceived(:final code, :final reason):
         _finish(KletsoCloseInfo(code, reason));
     }
@@ -188,6 +199,7 @@ final class _WebSocketSocket implements KletsoSocket {
       });
     }
     unawaited(_frames.close());
+    unawaited(_audio.close());
     unawaited(_sub.cancel());
     if (!_done.isCompleted) _done.complete(info);
   }
@@ -197,6 +209,17 @@ final class _WebSocketSocket implements KletsoSocket {
     if (_closed) throw const KletsoNetworkException('socket is closed');
     try {
       _ws.sendText(jsonEncode(frame.toJson()));
+    } on WebSocketConnectionClosed catch (e) {
+      _finish(const KletsoCloseInfo(null, 'send after close'));
+      throw KletsoNetworkException('socket closed', cause: e);
+    }
+  }
+
+  @override
+  Future<void> sendAudio(KletsoAudioFrame frame) async {
+    if (_closed) throw const KletsoNetworkException('socket is closed');
+    try {
+      _ws.sendBytes(frame.encode());
     } on WebSocketConnectionClosed catch (e) {
       _finish(const KletsoCloseInfo(null, 'send after close'));
       throw KletsoNetworkException('socket closed', cause: e);

@@ -70,6 +70,26 @@ final class ScriptedSocket implements KletsoSocket {
   @override
   Future<KletsoCloseInfo> get done => _done.future;
 
+  /// Audio frames the connection sent (voice).
+  final List<KletsoAudioFrame> sentAudio = <KletsoAudioFrame>[];
+  final StreamController<KletsoAudioFrame> _audio =
+      StreamController<KletsoAudioFrame>();
+
+  @override
+  bool get supportsBinary => true;
+
+  @override
+  Stream<KletsoAudioFrame> get audio => _audio.stream;
+
+  @override
+  Future<void> sendAudio(KletsoAudioFrame frame) async {
+    if (closed) throw const KletsoNetworkException('socket closed');
+    sentAudio.add(frame);
+  }
+
+  /// Delivers an assistant audio frame.
+  void pushAudio(KletsoAudioFrame frame) => _audio.add(frame);
+
   /// Delivers a server frame.
   void push(KletsoServerFrame frame) => _frames.add(frame);
 

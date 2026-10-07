@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'package:kletso_ui_schema/kletso_ui_schema.dart';
+import 'package:meta/meta.dart';
 
 import 'api/api.dart';
 import 'api/http_api.dart';
@@ -26,6 +27,7 @@ import 'transport/sse_transport.dart';
 import 'transport/transport.dart';
 import 'transport/web_socket_transport.dart';
 import 'value_listenable.dart';
+import 'voice/voice_controller.dart';
 
 /// Names of the silent app events the SDK sends on its own.
 abstract final class KletsoEvents {
@@ -43,7 +45,7 @@ typedef KletsoUserTokenRefresher = Future<String?> Function();
 /// state and the public observables. Everything is exposed as
 /// [KletsoValueListenable]s and one broadcast [events] stream so hosts can
 /// wrap it in whatever state library they use.
-final class KletsoClient {
+final class KletsoClient implements KletsoVoiceLink {
   /// Creates a client. All dependencies are injectable: [api] and
   /// [transport] for fakes, [httpClient] for `MockClient` (used only when
   /// [api] or [transport] are not supplied), [random] for deterministic ids
@@ -117,6 +119,7 @@ final class KletsoClient {
       StreamController<KletsoNotification>.broadcast();
   final Set<String> _seenNotificationIds = <String>{};
   KletsoPushToken? _pushToken;
+  KletsoVoiceController? _voice;
 
   // ---- observables ----------------------------------------------------------
 
@@ -143,6 +146,7 @@ final class KletsoClient {
 
   /// Every protocol and client event. Broadcast; late listeners miss earlier
   /// events, use the value listenables for state.
+  @override
   Stream<KletsoEvent> get events => _events.stream;
 
   /// Proactive `app.notify` notifications, deduped on `notificationId`,
@@ -152,6 +156,14 @@ final class KletsoClient {
 
   /// The push token registered for this session, if any.
   KletsoPushToken? get pushToken => _pushToken;
+
+  /// Voice sessions on the active conversation (D78). Install the platform
+  /// audio with `KletsoVoice.install(client)` from `package:kletso_voice`;
+  /// check `voice.available` before showing a microphone button.
+  KletsoVoiceController get voice {
+    _checkNotDisposed();
+    return _voice ??= KletsoVoiceController(this);
+  }
 
   /// Read-only view of the runtime context.
   Map<String, Object?> get context =>
@@ -242,7 +254,8 @@ final class KletsoClient {
     );
     _subs
       ..add(connection.events.listen(_onEnvelope))
-      ..add(connection.errors.listen(_onError));
+      ..add(connection.errors.listen(_onError))
+      ..add(connection.audio.listen(_audioRelay.add));
     connection.state.addListener(_onConnectionState);
     if (!_paused) await connection.connect();
   }
@@ -441,6 +454,7 @@ final class KletsoClient {
 
   /// Returns the active conversation, reusing the most recent one or
   /// starting a new one when there is none.
+  @override
   Future<KletsoConversation> ensureConversation() async {
     final active = _active.value;
     if (active != null) return active;
@@ -540,6 +554,7 @@ final class KletsoClient {
   /// Closes the socket without forgetting anything (app went to background).
   Future<void> pause() async {
     _paused = true;
+    await _voice?.stop(background: true);
     await _connection?.disconnect();
   }
 
@@ -556,11 +571,46 @@ final class KletsoClient {
     }
   }
 
+  // ---- voice link (internal) -------------------------------------------------------
+
+  @override
+  @internal
+  String newClientId() => _ids.clientId();
+
+  @override
+  @internal
+  void sendFrame(KletsoClientFrame frame) => _connection?.send(frame);
+
+  @override
+  @internal
+  bool sendAudio(KletsoAudioFrame frame) =>
+      _connection?.sendAudio(frame) ?? false;
+
+  @override
+  @internal
+  bool get supportsBinary => _connection?.supportsBinary ?? false;
+
+  @override
+  @internal
+  Stream<KletsoAudioFrame> get audio => _audioRelay.stream;
+  final StreamController<KletsoAudioFrame> _audioRelay =
+      StreamController<KletsoAudioFrame>.broadcast();
+
+  @override
+  @internal
+  bool get voiceEnabled => _bootstrap?.voice.enabled ?? false;
+
+  @override
+  @internal
+  bool get pushToTalk => _bootstrap?.voice.pushToTalk ?? false;
+
   /// Releases every resource. The client is unusable afterwards.
   Future<void> dispose() async {
     if (_disposed) return;
     _disposed = true;
     _typingTimer?.cancel();
+    await _voice?.dispose();
+    await _audioRelay.close();
     await _teardownConnection();
     if (_ownsApi) _api.close();
     _connectionState.dispose();

@@ -3,7 +3,7 @@ description: >-
   Protocol package for Kletso: JSON Schemas, hand-written Dart models and
   conformance fixtures for kletso.ui/v1 surfaces, kletso.events/v1 and the
   realtime frames.
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai

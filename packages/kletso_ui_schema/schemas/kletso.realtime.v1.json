@@ -19,7 +19,12 @@
         { "properties": { "t": { "const": "screen" }, "name": { "type": "string", "minLength": 1 } }, "required": ["name"] },
         { "properties": { "t": { "const": "switch" }, "conversationId": { "$ref": "#/$defs/conversationId" }, "after": { "type": "integer", "minimum": 0 } }, "required": ["conversationId"] },
         { "properties": { "t": { "const": "typing" } } },
-        { "properties": { "t": { "const": "ping" } } }
+        { "properties": { "t": { "const": "ping" } } },
+        { "properties": { "t": { "const": "voice.start" }, "mode": { "enum": ["vad", "ptt"] }, "sampleRate": { "enum": [24000] }, "clientId": { "$ref": "#/$defs/clientId" } }, "required": ["clientId"] },
+        { "properties": { "t": { "const": "voice.stop" }, "reason": { "enum": ["user", "background"] } } },
+        { "properties": { "t": { "const": "voice.commit" } } },
+        { "properties": { "t": { "const": "voice.played" }, "itemId": { "type": "string", "minLength": 1 }, "ms": { "type": "integer", "minimum": 0 } }, "required": ["itemId", "ms"] },
+        { "properties": { "t": { "const": "voice.text" }, "text": { "type": "string", "minLength": 1, "maxLength": 4000 } }, "required": ["text"] }
       ]
     },
     "serverFrame": {
@@ -31,6 +36,10 @@
         { "properties": { "t": { "const": "event" }, "event": { "$ref": "kletso.events.v1.json" } }, "required": ["event"] },
         { "properties": { "t": { "const": "error" }, "code": { "type": "string" }, "message": { "type": "string" }, "retryable": { "type": "boolean" }, "retryAfterMs": { "type": "integer" } }, "required": ["code", "message"] }
       ]
+    },
+    "binaryFrameKinds": {
+      "description": "Voice audio travels as binary WebSocket frames: byte 0 is the kind (1 = audio in, client to server; 2 = audio out, server to client), the rest is PCM16 little-endian mono 24 kHz, at most 16384 bytes per frame. Binary frames are never logged or replayed.",
+      "enum": [1, 2]
     },
     "closeCodes": {
       "description": "WebSocket close codes used by the server.",

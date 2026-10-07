@@ -6,3 +6,4 @@ workspace:
   - packages/kletso_ui_schema
   - packages/kletso_core
   - packages/kletso_flutter
+  - packages/kletso_voice

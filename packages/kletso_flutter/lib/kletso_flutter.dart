@@ -13,6 +13,14 @@ library;
 
 export 'package:kletso_core/kletso_core.dart';
 
+export 'src/avatar/avatar_controller.dart' show KletsoAvatarController;
+export 'src/avatar/avatar_face.dart'
+    show KletsoAvatarEyeShape, KletsoAvatarFaceParams, KletsoAvatarMood;
+export 'src/avatar/avatar_painter.dart'
+    show KletsoAvatarColors, KletsoAvatarPainter;
+export 'src/avatar/client_avatar.dart' show KletsoClientAvatar;
+export 'src/avatar/kletso_avatar.dart' show KletsoAvatar, KletsoAvatarStyle;
+export 'src/avatar/kletso_avatar_face.g.dart' show KletsoAvatarFaceData;
 export 'src/blocks/chart_block.dart'
     show KletsoChartPainter, KletsoChartPoint, KletsoChartSeries;
 export 'src/blocks/media_blocks.dart'
@@ -68,5 +76,9 @@ export 'src/registry/ui_bindings.dart'
 export 'src/registry/url_policy.dart' show KletsoUrlPolicy;
 export 'src/surface/fallback.dart' show KletsoFallback;
 export 'src/surface/surface_view.dart' show KletsoSurfaceView;
-export 'src/theme/kletso_theme.dart' show KletsoLauncherPosition, KletsoTheme;
+export 'src/theme/kletso_theme.dart'
+    show KletsoLauncherIcon, KletsoLauncherPosition, KletsoTheme;
 export 'src/theme/kletso_tokens.g.dart' show KletsoTokens;
+export 'src/voice/voice_button.dart'
+    show KletsoVoiceButton, kletsoVoiceAvailable;
+export 'src/voice/voice_sheet.dart' show KletsoVoiceSheet, showKletsoVoiceSheet;

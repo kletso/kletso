@@ -14,9 +14,13 @@ export 'src/events/enums.dart'
     show
         KletsoConversationStatus,
         KletsoFinishReason,
+        KletsoMessageModality,
+        KletsoMoodSource,
         KletsoNotificationChannel,
         KletsoRole,
         KletsoTriggerKind,
+        KletsoVoiceEndReason,
+        KletsoVoiceState,
         KletsoWorkflowStatus;
 export 'src/events/envelope.dart' show KletsoEventEnvelope;
 export 'src/events/payload.dart'
@@ -24,6 +28,7 @@ export 'src/events/payload.dart'
         KletsoAgentTyping,
         KletsoAppCommand,
         KletsoAppNotification,
+        KletsoAvatarMoodEvent,
         KletsoConversationEvent,
         KletsoErrorEvent,
         KletsoEventPayload,
@@ -40,11 +45,17 @@ export 'src/events/payload.dart'
         KletsoUiPatch,
         KletsoUiRender,
         KletsoUnknownEvent,
+        KletsoVoiceEnded,
+        KletsoVoiceInterrupted,
+        KletsoVoiceStarted,
+        KletsoVoiceStateEvent,
+        KletsoVoiceTranscript,
         KletsoWorkflowEvent;
 export 'src/fixtures/generators.dart' show KletsoFixtureGenerators;
 export 'src/fixtures/script.dart' show KletsoConversationScript;
 export 'src/generated/embedded.g.dart' show KletsoFixtures, KletsoSchemas;
 export 'src/json_utils.dart' show JsonMap, jsonEquals;
+export 'src/realtime/binary.dart' show KletsoAudioFrame;
 export 'src/realtime/frames.dart'
     show
         KletsoActionFrame,
@@ -63,7 +74,14 @@ export 'src/realtime/frames.dart'
         KletsoSwitchFrame,
         KletsoTrackFrame,
         KletsoTypingFrame,
-        KletsoUnknownServerFrame;
+        KletsoUnknownServerFrame,
+        KletsoVoiceCommitFrame,
+        KletsoVoiceMode,
+        KletsoVoicePlayedFrame,
+        KletsoVoiceStartFrame,
+        KletsoVoiceStopFrame,
+        KletsoVoiceStopReason,
+        KletsoVoiceTextFrame;
 export 'src/ui/action.dart'
     show
         KletsoAction,

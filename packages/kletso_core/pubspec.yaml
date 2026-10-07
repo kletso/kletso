@@ -3,7 +3,7 @@ description: >-
   Pure-Dart client for Kletso: sessions, realtime connection (WebSocket / SSE)
   with reconnect and replay, conversation state and typed events. No Flutter,
   no platform channels, Wasm-clean.
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai
@@ -16,7 +16,7 @@ environment:
 dependencies:
   clock: ^1.1.3
   http: ^1.6.0
-  kletso_ui_schema: ^0.1.0
+  kletso_ui_schema: ^0.2.0
   meta: ^1.16.0
   web_socket: ^1.0.1
 

@@ -69,7 +69,8 @@ export 'src/session.dart'
         KletsoDevice,
         KletsoEndUser,
         KletsoSession,
-        KletsoSessionBootstrap;
+        KletsoSessionBootstrap,
+        KletsoVoiceInfo;
 export 'src/token_store.dart' show KletsoMemoryTokenStore, KletsoTokenStore;
 export 'src/transport/auto_transport.dart' show KletsoAutoTransport;
 export 'src/transport/sse_parser.dart' show KletsoSseEvent, KletsoSseParser;
@@ -80,3 +81,6 @@ export 'src/transport/web_socket_transport.dart'
     show KletsoWebSocketConnector, KletsoWebSocketTransport;
 export 'src/value_listenable.dart'
     show KletsoValueListenable, KletsoValueNotifier;
+export 'src/voice/audio_io.dart' show KletsoAudioIo;
+export 'src/voice/voice_controller.dart'
+    show KletsoVoiceController, KletsoVoiceStatus;

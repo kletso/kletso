@@ -179,3 +179,115 @@ enum KletsoNotificationChannel {
     orElse: () => KletsoNotificationChannel.banner,
   );
 }
+
+/// How a message was produced.
+enum KletsoMessageModality {
+  /// Typed or tapped.
+  text('text'),
+
+  /// Spoken in a voice session (the text is a transcript).
+  voice('voice'),
+
+  /// A value this client does not know.
+  unknown('unknown');
+
+  const KletsoMessageModality(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; `null` is [text], anything unrecognised is [unknown].
+  static KletsoMessageModality parse(String? value) => value == null
+      ? KletsoMessageModality.text
+      : values.firstWhere(
+          (m) => m.wire == value,
+          orElse: () => KletsoMessageModality.unknown,
+        );
+}
+
+/// What the voice session is doing, as reported by `voice.state`.
+enum KletsoVoiceState {
+  /// The microphone is open and the model waits for speech.
+  listening('listening'),
+
+  /// Speech ended; the model (or a tool) is working.
+  thinking('thinking'),
+
+  /// Audio is being produced.
+  speaking('speaking'),
+
+  /// The session is open but nothing is happening.
+  idle('idle'),
+
+  /// A value this client does not know.
+  unknown('unknown');
+
+  const KletsoVoiceState(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; anything unrecognised is [unknown].
+  static KletsoVoiceState parse(String? value) => values.firstWhere(
+    (s) => s.wire == value,
+    orElse: () => KletsoVoiceState.unknown,
+  );
+}
+
+/// Why a voice session ended.
+enum KletsoVoiceEndReason {
+  /// The user ended it.
+  user('user'),
+
+  /// Nobody spoke for the configured idle time.
+  idle('idle'),
+
+  /// The session reached its maximum duration.
+  limit('limit'),
+
+  /// The provider or runtime failed.
+  error('error'),
+
+  /// The agent has no voice API key.
+  notConfigured('not_configured'),
+
+  /// A value this client does not know.
+  unknown('unknown');
+
+  const KletsoVoiceEndReason(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; anything unrecognised is [unknown].
+  static KletsoVoiceEndReason parse(String? value) => values.firstWhere(
+    (r) => r.wire == value,
+    orElse: () => KletsoVoiceEndReason.unknown,
+  );
+}
+
+/// Who chose an `avatar.mood`.
+enum KletsoMoodSource {
+  /// A configured event rule.
+  rule('rule'),
+
+  /// The agent itself (`set_mood` tool).
+  agent('agent'),
+
+  /// The runtime's transcript heuristic.
+  heuristic('heuristic'),
+
+  /// A value this client does not know.
+  unknown('unknown');
+
+  const KletsoMoodSource(this.wire);
+
+  /// The wire string.
+  final String wire;
+
+  /// Parses [value]; anything unrecognised is [unknown].
+  static KletsoMoodSource parse(String? value) => values.firstWhere(
+    (s) => s.wire == value,
+    orElse: () => KletsoMoodSource.unknown,
+  );
+}

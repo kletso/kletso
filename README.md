@@ -7,6 +7,7 @@ speaks up proactively when rules you write in the dashboard say so. Pure Dart: A
 | Package | What it is |
 |---|---|
 | [`kletso_flutter`](packages/kletso_flutter) | Chat UI, launcher, 30 built-in blocks, component and action registries, notification host, `kletso_flutter:sync` |
+| [`kletso_voice`](packages/kletso_voice) | Microphone and speaker for voice sessions (`KletsoVoice.install(client)`); Wasm-safe web capture |
 | [`kletso_core`](packages/kletso_core) | `KletsoClient`: sessions, WebSocket/SSE transports with replay, context and events, notifications and push handoff, fake backend for tests |
 | [`kletso_ui_schema`](packages/kletso_ui_schema) | JSON schemas, fixtures and Dart models for `kletso.ui/v1`, `kletso.events/v1` and the realtime frames |
 

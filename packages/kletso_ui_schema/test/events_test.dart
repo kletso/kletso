@@ -256,6 +256,53 @@ void main() {
     }
   });
 
+  test('voice turn fixture has typed payloads with the voice modality', () {
+    final log = (KletsoFixtures.eventsVoiceTurn! as List)
+        .map((e) => KletsoEventEnvelope.fromJson(e))
+        .toList();
+    final payloads = log.map((e) => e.payload).toList();
+    final started = payloads.whereType<KletsoVoiceStarted>().single;
+    expect(started.model, 'gpt-realtime-2.1');
+    expect(started.maxSeconds, 900);
+    expect(
+      payloads.whereType<KletsoVoiceStateEvent>().map((p) => p.state),
+      containsAll(<KletsoVoiceState>[
+        KletsoVoiceState.listening,
+        KletsoVoiceState.thinking,
+        KletsoVoiceState.speaking,
+      ]),
+    );
+    final transcripts = payloads.whereType<KletsoVoiceTranscript>().toList();
+    expect(transcripts.first.isFinal, isFalse);
+    expect(transcripts.last.isFinal, isTrue);
+    final created = payloads.whereType<KletsoMessageCreated>().toList();
+    expect(created.first.modality, KletsoMessageModality.voice);
+    expect(
+      payloads.whereType<KletsoMessageDelta>().first.modality,
+      KletsoMessageModality.voice,
+    );
+    final completed = payloads.whereType<KletsoMessageCompleted>().single;
+    expect(completed.modality, KletsoMessageModality.voice);
+    expect(completed.finishReason, KletsoFinishReason.cancelled);
+    final cut = payloads.whereType<KletsoVoiceInterrupted>().single;
+    expect(cut.audioEndMs, 1840);
+    final ended = payloads.whereType<KletsoVoiceEnded>().single;
+    expect(ended.reason, KletsoVoiceEndReason.user);
+    expect(ended.audioInSeconds, 14.2);
+    final moods = payloads.whereType<KletsoAvatarMoodEvent>().toList();
+    expect(moods[1].source, KletsoMoodSource.heuristic);
+    expect(moods[1].ttl, const Duration(seconds: 2));
+    expect(moods.last.ttl, isNull);
+    // Text messages default to the text modality; unknown strings parse to
+    // unknown so renderers can fall back.
+    expect(KletsoMessageModality.parse(null), KletsoMessageModality.text);
+    expect(KletsoMessageModality.parse('sms'), KletsoMessageModality.unknown);
+    expect(
+      KletsoVoiceEndReason.parse('not_configured'),
+      KletsoVoiceEndReason.notConfigured,
+    );
+  });
+
   test('unknown event types are tolerated', () {
     final e = KletsoEventEnvelope.fromJson({
       'id': 'evt_9',

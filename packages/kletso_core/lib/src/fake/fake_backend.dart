@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
 import 'package:kletso_ui_schema/kletso_ui_schema.dart';
@@ -42,6 +44,7 @@ final class KletsoFakeBackend implements KletsoApi, KletsoTransport {
       StreamController<(String, KletsoEventEnvelope)>.broadcast();
   final Map<String, KletsoPushToken> _pushTokens = <String, KletsoPushToken>{};
   int _pushesSent = 0;
+  int _audioSent = 0;
   int _handshakes = 0;
   int _messagesSeen = 0;
   int _ids = 0;
@@ -53,6 +56,50 @@ final class KletsoFakeBackend implements KletsoApi, KletsoTransport {
 
   /// The custom component type the fake agent may render.
   static const List<String> allowedComponents = <String>['acme.productCard'];
+
+  /// The avatar block the fake session bootstrap carries (mirrors the
+  /// runtime's defaults).
+  static const Map<String, Object?> fakeAvatar = <String, Object?>{
+    'style': 'kletso',
+    'colors': null,
+    'imageUrl': null,
+    'defaultMood': 'neutral',
+    'moods': <String>[
+      'neutral',
+      'happy',
+      'laughing',
+      'surprised',
+      'thinking',
+      'wink',
+      'listening',
+      'speaking',
+      'sorry',
+      'confused',
+      'sleepy',
+    ],
+    'rules': <Map<String, Object?>>[
+      <String, Object?>{'on': 'agent.typing', 'mood': 'thinking', 'ttlMs': 0},
+      <String, Object?>{'on': 'tool.started', 'mood': 'thinking', 'ttlMs': 0},
+      <String, Object?>{'on': 'tool.failed', 'mood': 'sorry', 'ttlMs': 2500},
+      <String, Object?>{'on': 'error', 'mood': 'sorry', 'ttlMs': 2500},
+      <String, Object?>{
+        'on': 'message.completed',
+        'mood': 'happy',
+        'ttlMs': 2000,
+      },
+      <String, Object?>{
+        'on': 'voice.listening',
+        'mood': 'listening',
+        'ttlMs': 0,
+      },
+      <String, Object?>{'on': 'voice.thinking', 'mood': 'thinking', 'ttlMs': 0},
+      <String, Object?>{'on': 'voice.speaking', 'mood': 'speaking', 'ttlMs': 0},
+      <String, Object?>{'on': 'voice.idle', 'mood': 'neutral', 'ttlMs': 0},
+      <String, Object?>{'on': 'unread', 'mood': 'wink', 'ttlMs': 1500},
+      <String, Object?>{'on': 'handoff.started', 'mood': 'neutral', 'ttlMs': 0},
+    ],
+    'agentMayPick': false,
+  };
 
   /// Hosts the fake agent links to.
   static const List<String> allowedUrlHosts = <String>[
@@ -79,6 +126,9 @@ final class KletsoFakeBackend implements KletsoApi, KletsoTransport {
 
   /// How many push payloads [sendPush] produced.
   int get pushesSent => _pushesSent;
+
+  /// Bytes of microphone PCM received over all sockets, for assertions.
+  int get audioBytesReceived => _audioSent;
 
   /// Server-originated notification (what a dashboard workflow's "notify the
   /// app" step does): delivered live over the user's socket, attached to
@@ -218,6 +268,14 @@ final class KletsoFakeBackend implements KletsoApi, KletsoTransport {
       allowedComponents: allowedComponents,
     ),
     realtimeUrl: Uri.parse('wss://fake.kletso.test/v1/realtime'),
+    voice: KletsoVoiceInfo(
+      enabled: scenario.voice,
+      model: 'gpt-realtime-2.1',
+      voiceName: 'marin',
+      maxSeconds: 900,
+      idleSeconds: 60,
+    ),
+    avatar: fakeAvatar,
     theme: const <String, Object?>{
       'primary': '#FF6A2B',
       'onPrimary': '#FFFFFF',
@@ -710,6 +768,187 @@ final class _Conversation {
   final Set<String> seenClientIds = <String>{};
   String? pendingConfirmCallId;
 
+  /// Voice session state (one per conversation, like the runtime).
+  bool voiceActive = false;
+  bool voiceSpeaking = false;
+  int _voiceBytes = 0;
+  int _voiceUtterances = 0;
+  int _voiceSeconds = 0;
+  int _voiceOutBytes = 0;
+
+  void onVoiceStart(KletsoVoiceStartFrame frame) {
+    if (!seenClientIds.add(frame.clientId)) return;
+    if (!backend.scenario.voice) {
+      _voiceError(
+        'voice_unavailable',
+        'Voice is not enabled for this assistant.',
+      );
+      return;
+    }
+    if (voiceActive) {
+      _voiceError('conflict', 'a voice session is already running');
+      return;
+    }
+    voiceActive = true;
+    _voiceBytes = 0;
+    _voiceOutBytes = 0;
+    add(KletsoEventTypes.voiceStarted, <String, Object?>{
+      'voiceSessionId': 'vs_01J8FAKE${seq.toString().padLeft(6, '0')}',
+      'model': 'gpt-realtime-2.1',
+      'voice': 'marin',
+      'limits': <String, Object?>{'maxSeconds': 900, 'idleSeconds': 60},
+    });
+    add(KletsoEventTypes.voiceState, <String, Object?>{'state': 'listening'});
+  }
+
+  void onVoiceStop() {
+    if (!voiceActive) return;
+    voiceActive = false;
+    voiceSpeaking = false;
+    add(KletsoEventTypes.voiceEnded, <String, Object?>{
+      'reason': 'user',
+      'usage': <String, Object?>{
+        'audioInSeconds': _voiceBytes / KletsoAudioFrame.bytesPerSecond,
+        'audioOutSeconds': _voiceOutBytes / KletsoAudioFrame.bytesPerSecond,
+        'costMicros': _voiceSeconds * 1600,
+      },
+    });
+  }
+
+  void onAudioIn(KletsoAudioFrame frame) {
+    if (!voiceActive) return;
+    if (voiceSpeaking) {
+      // Barge-in: the user talks over the assistant.
+      voiceSpeaking = false;
+      add(KletsoEventTypes.voiceInterrupted, <String, Object?>{
+        'itemId': 'item_01J8FAKE${messages.toString().padLeft(6, '0')}',
+        'audioEndMs': 400,
+      });
+      add(KletsoEventTypes.voiceState, <String, Object?>{'state': 'listening'});
+      _voiceBytes = 0;
+    }
+    _voiceBytes += frame.pcm.lengthInBytes;
+    _voiceSeconds = _voiceBytes ~/ KletsoAudioFrame.bytesPerSecond;
+    if (_voiceBytes - _voiceUtterances * 48000 >= 48000) {
+      // About one second of speech heard: treat it as an utterance.
+      _voiceUtterances++;
+      unawaited(_voiceTurn(backend.scenario.voiceTranscript));
+    }
+  }
+
+  void onVoiceCommit() {
+    if (!voiceActive) return;
+    unawaited(_voiceTurn(backend.scenario.voiceTranscript));
+  }
+
+  void onVoiceText(String text) {
+    if (!voiceActive) return;
+    final turnId = newTurn();
+    add(KletsoEventTypes.messageCreated, <String, Object?>{
+      'messageId': newMessage(),
+      'role': 'user',
+      'text': text,
+      'modality': 'text',
+    }, turnId: turnId);
+    unawaited(
+      reply(
+        _Reply.forInput(text, null, sampleMedia: backend.scenario.sampleMedia),
+        turnId: turnId,
+        voice: true,
+      ),
+    );
+  }
+
+  Future<void> _voiceTurn(String transcript) async {
+    final turnId = newTurn();
+    add(KletsoEventTypes.voiceState, <String, Object?>{'state': 'thinking'});
+    final words = transcript.split(' ');
+    add(KletsoEventTypes.voiceTranscript, <String, Object?>{
+      'role': 'user',
+      'text': words.take(max(1, words.length ~/ 2)).join(' '),
+      'final': false,
+    }, turnId: turnId);
+    add(KletsoEventTypes.voiceTranscript, <String, Object?>{
+      'role': 'user',
+      'text': transcript,
+      'final': true,
+    }, turnId: turnId);
+    add(KletsoEventTypes.messageCreated, <String, Object?>{
+      'messageId': newMessage(),
+      'role': 'user',
+      'text': transcript,
+      'modality': 'voice',
+    }, turnId: turnId);
+    await reply(
+      _Reply.forInput(
+        transcript,
+        null,
+        sampleMedia: backend.scenario.sampleMedia,
+      ),
+      turnId: turnId,
+      voice: true,
+    );
+  }
+
+  void _voiceError(String code, String message) {
+    for (final s in backend._sockets.where((s) => s._conversationId == id)) {
+      s._push(KletsoErrorFrame(code: code, message: message));
+    }
+    add(KletsoEventTypes.voiceEnded, <String, Object?>{
+      'reason': code == 'voice_unavailable' ? 'error' : 'error',
+    });
+  }
+
+  /// Pushes synthesised speech (a warbling tone, 40 ms frames) to every
+  /// socket on this conversation, paced in real time unless the scenario is
+  /// instant.
+  Future<void> _speak(String text) async {
+    final s = backend.scenario;
+    final frames = _toneFor(text);
+    voiceSpeaking = true;
+    add(KletsoEventTypes.voiceState, <String, Object?>{'state': 'speaking'});
+    for (final f in frames) {
+      if (!voiceActive || !voiceSpeaking || backend._closed) return;
+      _voiceOutBytes += f.pcm.lengthInBytes;
+      for (final sock in backend._sockets.where(
+        (s) => s._conversationId == id,
+      )) {
+        sock._pushAudio(f);
+      }
+      if (s.deltaDelay != Duration.zero) {
+        await Future<void>.delayed(const Duration(milliseconds: 40));
+      }
+    }
+  }
+
+  /// 40 ms PCM16 frames of a tone whose pitch and loudness follow the text's
+  /// syllables, so meters and lip-sync have something to show.
+  static List<KletsoAudioFrame> _toneFor(String text) {
+    const rate = KletsoAudioFrame.sampleRate;
+    const frameSamples = rate ~/ 25; // 40 ms
+    final seconds = (0.35 + text.length * 0.045).clamp(0.6, 6.0);
+    final total = (seconds * rate).round();
+    final out = <KletsoAudioFrame>[];
+    for (var start = 0; start < total; start += frameSamples) {
+      final n = min(frameSamples, total - start);
+      final bytes = ByteData(n * 2);
+      for (var i = 0; i < n; i++) {
+        final t = (start + i) / rate;
+        final syllable = (sin(2 * pi * 3.1 * t).abs() * 0.8 + 0.2);
+        final pitch = 230 + 60 * sin(2 * pi * 0.7 * t);
+        final v = sin(2 * pi * pitch * t) * syllable * 0.35;
+        bytes.setInt16(i * 2, (v * 32767).round(), Endian.little);
+      }
+      out.add(
+        KletsoAudioFrame(
+          kind: KletsoAudioFrame.audioOut,
+          pcm: bytes.buffer.asUint8List(),
+        ),
+      );
+    }
+    return out;
+  }
+
   KletsoConversation get info => KletsoConversation(
     id: id,
     agentId: agentId,
@@ -897,16 +1136,18 @@ final class _Conversation {
   Future<void> _delay(Duration d) =>
       d == Duration.zero ? Future<void>.value() : Future<void>.delayed(d);
 
-  Future<void> reply(_Reply r, {String? turnId}) async {
+  Future<void> reply(_Reply r, {String? turnId, bool voice = false}) async {
     final s = backend.scenario;
     turnId ??= newTurn();
     await _delay(s.thinkingDelay);
     if (backend._closed) return;
-    add(
-      KletsoEventTypes.agentTyping,
-      const <String, Object?>{},
-      turnId: turnId,
-    );
+    if (!voice) {
+      add(
+        KletsoEventTypes.agentTyping,
+        const <String, Object?>{},
+        turnId: turnId,
+      );
+    }
     final complete = r.completeTool;
     if (complete != null) {
       await _delay(s.toolDelay);
@@ -962,17 +1203,35 @@ final class _Conversation {
       'messageId': messageId,
       'role': 'assistant',
       'text': '',
+      if (voice) 'modality': 'voice',
     }, turnId: turnId);
+    Future<void>? speaking;
+    if (voice && voiceActive) {
+      speaking = _speak(r.text);
+      final mood = _moodFor(r.text);
+      if (mood != null) {
+        add(KletsoEventTypes.avatarMood, <String, Object?>{
+          'mood': mood,
+          'source': 'heuristic',
+          'ttlMs': 2500,
+        }, turnId: turnId);
+      }
+    }
     for (final chunk in _chunks(r.text)) {
       await _delay(s.deltaDelay);
       if (backend._closed) return;
+      if (voice && !voiceSpeaking && speaking != null) break; // interrupted
       add(KletsoEventTypes.messageDelta, <String, Object?>{
         'messageId': messageId,
         'text': chunk,
+        if (voice) 'modality': 'voice',
       }, turnId: turnId);
     }
+    if (speaking != null) await speaking;
+    final interrupted = voice && speaking != null && !voiceSpeaking;
     add(KletsoEventTypes.messageCompleted, <String, Object?>{
       'messageId': messageId,
+      if (voice) 'modality': 'voice',
       'text': r.text,
       'usage': <String, Object?>{
         'in': 900 + r.text.length,
@@ -982,8 +1241,16 @@ final class _Conversation {
       },
       'costMicros': 1200,
       'latencyMs': s.thinkingDelay.inMilliseconds + s.toolDelay.inMilliseconds,
-      'finishReason': r.confirmTool != null ? 'tool_calls' : 'stop',
+      'finishReason': interrupted
+          ? 'cancelled'
+          : r.confirmTool != null
+          ? 'tool_calls'
+          : 'stop',
     }, turnId: turnId);
+    if (voice && voiceActive) {
+      voiceSpeaking = false;
+      add(KletsoEventTypes.voiceState, <String, Object?>{'state': 'listening'});
+    }
     final confirm = r.confirmTool;
     if (confirm != null) {
       pendingConfirmCallId = confirm.callId;
@@ -1038,6 +1305,16 @@ final class _Conversation {
         'conversation': info.toJson(),
       }, turnId: turnId);
     }
+  }
+
+  static String? _moodFor(String text) {
+    final t = text.toLowerCase();
+    if (t.contains('sorry') || t.contains('unfortunately')) return 'sorry';
+    if (t.contains('!') || t.contains('great') || t.contains('sure')) {
+      return 'happy';
+    }
+    if (t.contains('?')) return 'thinking';
+    return null;
   }
 
   static String? _titleFrom(List<KletsoEventEnvelope> log) {
@@ -1490,6 +1767,8 @@ final class _FakeSocket implements KletsoSocket {
   final _Session _session;
   final StreamController<KletsoServerFrame> _frames =
       StreamController<KletsoServerFrame>();
+  final StreamController<KletsoAudioFrame> _audio =
+      StreamController<KletsoAudioFrame>();
   final Completer<KletsoCloseInfo> _done = Completer<KletsoCloseInfo>();
   StreamSubscription<KletsoEventEnvelope>? _liveSub;
   String? _conversationId;
@@ -1505,6 +1784,24 @@ final class _FakeSocket implements KletsoSocket {
 
   @override
   Future<KletsoCloseInfo> get done => _done.future;
+
+  @override
+  bool get supportsBinary => true;
+
+  @override
+  Stream<KletsoAudioFrame> get audio => _audio.stream;
+
+  @override
+  Future<void> sendAudio(KletsoAudioFrame frame) async {
+    if (_closed) throw const KletsoNetworkException('socket closed');
+    _backend._audioSent += frame.pcm.lengthInBytes;
+    _backend._conversations[_conversationId]?.onAudioIn(frame);
+  }
+
+  void _pushAudio(KletsoAudioFrame frame) {
+    if (_closed) return;
+    _audio.add(frame);
+  }
 
   /// Session-wide delivery while no conversation is attached.
   StreamSubscription<(String, KletsoEventEnvelope)>? _userSub;
@@ -1578,6 +1875,7 @@ final class _FakeSocket implements KletsoSocket {
     unawaited(_userSub?.cancel());
     _backend._forget(this);
     unawaited(_frames.close());
+    unawaited(_audio.close());
     if (!_done.isCompleted) _done.complete(KletsoCloseInfo(code, reason));
   }
 
@@ -1611,6 +1909,26 @@ final class _FakeSocket implements KletsoSocket {
       case KletsoTrackFrame() || KletsoScreenFrame():
         _backend._fireTrigger(_session, frame);
       case KletsoTypingFrame() || KletsoAuthFrame():
+        break;
+      case KletsoVoiceStartFrame():
+        final conv = _backend._conversations[_conversationId];
+        if (conv == null) {
+          _push(
+            const KletsoErrorFrame(
+              code: 'invalid_request',
+              message: 'no conversation attached',
+            ),
+          );
+        } else {
+          conv.onVoiceStart(frame);
+        }
+      case KletsoVoiceStopFrame():
+        _backend._conversations[_conversationId]?.onVoiceStop();
+      case KletsoVoiceCommitFrame():
+        _backend._conversations[_conversationId]?.onVoiceCommit();
+      case KletsoVoiceTextFrame(:final text):
+        _backend._conversations[_conversationId]?.onVoiceText(text);
+      case KletsoVoicePlayedFrame():
         break;
     }
   }

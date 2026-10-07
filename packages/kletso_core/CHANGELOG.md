@@ -1,3 +1,10 @@
+## 0.2.0 — 2026-10-07
+
+- Voice: `KletsoClient.voice` (`KletsoVoiceController`: start/stop/commit, push-to-talk, state, captions, interruption), `KletsoAudioIo` (plug a microphone/speaker implementation such as `package:kletso_voice`), binary audio over the WebSocket transport and connection (`supportsBinary`, `audio` stream, `sendAudio`), `KletsoVoiceInfo` in the session bootstrap (`voiceEnabled`, `pushToTalk`).
+- Avatar: bootstrap `avatar` block parsed for the Flutter SDK (`style`, colours, `imageUrl`, per-mood `images`, moods, rules, agent-picked moods); `avatar.mood` events relayed.
+- Fake backend: voice turns (`onVoiceStart`/`onVoiceStop`/`onAudioIn`/`onVoiceCommit`/`onVoiceText`), synthetic audio tones, moods, `fakeAvatar`.
+- Depends on `kletso_ui_schema ^0.2.0`.
+
 ## 0.1.0 — 2026-09-29
 
 - Proactive notifications: `KletsoClient.notifications`, `KletsoNotification`, `registerPushToken`/`unregisterPushToken` (`KletsoPushToken`, `KletsoApi` + HTTP `PUT/DELETE /sessions/current/push-token`), `handlePushPayload` with dedupe (D57, D59).
