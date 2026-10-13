@@ -56,6 +56,14 @@ final class KletsoConnection {
   int _lastSeq = 0;
   final LinkedHashSet<String> _seenIds = LinkedHashSet<String>();
 
+  // Set while a `switch` (or the initial handshake's attach) is in flight:
+  // conversation-bound frames queue instead of going straight out, so a
+  // `message`/`action`/`voice.*` sent right after `attach()` is not lost to
+  // the server's "not attached to a conversation" error. Cleared, and the
+  // queue flushed, when the matching `ready` arrives (see `_onReady`).
+  bool _switching = false;
+  bool _flushing = false;
+
   final KletsoValueNotifier<KletsoConnectionState> _state =
       KletsoValueNotifier<KletsoConnectionState>(KletsoConnectionState.closed);
   final StreamController<KletsoEventEnvelope> _events =
@@ -140,6 +148,7 @@ final class KletsoConnection {
     _seenIds.clear();
     final socket = _socket;
     if (socket != null && _state.value == KletsoConnectionState.open) {
+      _switching = true;
       unawaited(
         _safeSend(
           socket,
@@ -181,7 +190,8 @@ final class KletsoConnection {
   void send(KletsoClientFrame frame) {
     _checkNotDisposed();
     final socket = _socket;
-    if (socket != null && _state.value == KletsoConnectionState.open) {
+    final held = _switching && _isConversationBound(frame);
+    if (socket != null && _state.value == KletsoConnectionState.open && !held) {
       unawaited(_safeSend(socket, frame));
       return;
     }
@@ -264,8 +274,13 @@ final class KletsoConnection {
       }
       _backoff.reset();
       _socket = socket;
+      // The transport request above already carried `_conversationId`, so
+      // this ready always matches it; the explicit `_flush` below (not a
+      // second queue) drains whatever is pending, so this synthetic ready
+      // does not also trigger one.
       _onReady(
         KletsoReadyFrame(seq: socket.readySeq, conversationId: _conversationId),
+        flush: false,
       );
       _setState(KletsoConnectionState.open);
       _firstOpen?.complete();
@@ -292,6 +307,10 @@ final class KletsoConnection {
       unawaited(_audioSub?.cancel() ?? Future<void>.value());
       _audioSub = null;
       _socket = null;
+      // Any in-flight switch is invalidated by the drop; the next handshake
+      // re-attaches to `_conversationId` from scratch and its synthetic
+      // `ready` (above) clears this again regardless.
+      _switching = false;
       _log.info('${_transport.name} closed: $info');
       if (!_wantConnected || _disposed) return;
       _setState(KletsoConnectionState.reconnecting, 'closed: $info');
@@ -400,10 +419,16 @@ final class KletsoConnection {
     }
   }
 
-  void _onReady(KletsoReadyFrame ready) {
+  /// Handles a `ready` frame, real (over the socket) or synthetic (the one
+  /// the handshake reports as `socket.readySeq` when the loop opens). Pass
+  /// `flush: false` for the synthetic one: the caller already flushes once
+  /// it finishes opening (see `_run`), so flushing here too would race it.
+  void _onReady(KletsoReadyFrame ready, {bool flush = true}) {
     if (ready.conversationId != null &&
         ready.conversationId != _conversationId) {
-      // A late ready for a conversation we already left; ignore.
+      // A late ready for a conversation we already left; ignore. In
+      // particular, do not clear `_switching` or flush: frames held for the
+      // conversation we are switching to must keep waiting.
       return;
     }
     if (ready.seq < _lastSeq) {
@@ -412,7 +437,10 @@ final class KletsoConnection {
       _lastSeq = ready.seq;
       _seenIds.clear();
     }
+    _switching = false;
     _readies.add(ready);
+    final socket = _socket;
+    if (flush && socket != null) unawaited(_flush(socket));
   }
 
   void _onEvent(KletsoEventEnvelope event) {
@@ -441,14 +469,46 @@ final class KletsoConnection {
   }
 
   Future<void> _flush(KletsoSocket socket) async {
-    while (_queue.isNotEmpty && _socket == socket) {
-      final frame = _queue.removeFirst();
-      if (!await _safeSend(socket, frame)) {
-        _queue.addFirst(frame);
-        return;
+    // Guards against the explicit post-handshake flush in `_run` and a
+    // `ready`-triggered flush (`_onReady`) draining the same `Queue`
+    // concurrently; the already-running loop picks up anything added while
+    // it awaits a send, so a second call is a no-op.
+    if (_flushing) return;
+    _flushing = true;
+    try {
+      while (_queue.isNotEmpty && _socket == socket) {
+        final frame = _queue.removeFirst();
+        if (!await _safeSend(socket, frame)) {
+          _queue.addFirst(frame);
+          return;
+        }
       }
+    } finally {
+      _flushing = false;
     }
   }
+
+  /// Whether [frame] belongs to a specific conversation, i.e. the server
+  /// rejects it with `invalid_request: not attached to a conversation`
+  /// unless the socket is currently attached to one (see `realtime.ts`'s
+  /// frame switch: `ping`/`switch`/`track`/`screen`/`context` are handled
+  /// without an attached conversation, everything else needs one).
+  bool _isConversationBound(KletsoClientFrame frame) => switch (frame) {
+    KletsoMessageFrame() ||
+    KletsoActionFrame() ||
+    KletsoTypingFrame() ||
+    KletsoVoiceStartFrame() ||
+    KletsoVoiceStopFrame() ||
+    KletsoVoiceCommitFrame() ||
+    KletsoVoicePlayedFrame() ||
+    KletsoVoiceTextFrame() => true,
+    KletsoAuthFrame() ||
+    KletsoPingFrame() ||
+    KletsoTrackFrame() ||
+    KletsoScreenFrame() ||
+    KletsoContextFrame() ||
+    KletsoSwitchFrame() => false,
+  };
 
   Future<bool> _safeSend(KletsoSocket socket, KletsoClientFrame frame) async {
     try {

@@ -317,6 +317,72 @@ void main() {
     },
   );
 
+  test('messages sent right after attach are held until ready, then delivered '
+      'in order', () {
+    fakeAsync((async) {
+      final t = ScriptedTransport()..willOpen();
+      final c = connection(t)..attach('conv_1');
+      unawaited(c.connect());
+      async.flushMicrotasks();
+      c.attach('conv_2', after: 0);
+      c
+        ..send(const KletsoMessageFrame(clientId: 'm1', text: '1'))
+        ..send(const KletsoMessageFrame(clientId: 'm2', text: '2'));
+      async.flushMicrotasks();
+      // held: only the switch went out, the messages are still queued.
+      expect(t.current.sent.last, isA<KletsoSwitchFrame>());
+      expect(c.queuedFrames, 2);
+      t.current.push(const KletsoReadyFrame(seq: 0, conversationId: 'conv_2'));
+      async.flushMicrotasks();
+      expect(
+        t.current.sent.whereType<KletsoMessageFrame>().map((f) => f.clientId),
+        ['m1', 'm2'],
+      );
+      expect(c.queuedFrames, 0);
+      unawaited(c.dispose());
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a ready for a stale conversation does not flush the queue', () {
+    fakeAsync((async) {
+      final t = ScriptedTransport()..willOpen();
+      final c = connection(t)..attach('conv_1');
+      unawaited(c.connect());
+      async.flushMicrotasks();
+      c.attach('conv_2', after: 0);
+      c.send(const KletsoMessageFrame(clientId: 'm1', text: 'hi'));
+      async.flushMicrotasks();
+      // A late ready for the conversation we already left must not flush.
+      t.current.push(const KletsoReadyFrame(seq: 5, conversationId: 'conv_1'));
+      async.flushMicrotasks();
+      expect(c.queuedFrames, 1);
+      expect(t.current.sent.whereType<KletsoMessageFrame>(), isEmpty);
+      t.current.push(const KletsoReadyFrame(seq: 0, conversationId: 'conv_2'));
+      async.flushMicrotasks();
+      expect(c.queuedFrames, 0);
+      expect(t.current.sent.whereType<KletsoMessageFrame>(), hasLength(1));
+      unawaited(c.dispose());
+      async.flushMicrotasks();
+    });
+  });
+
+  test('ping is not held while switching', () {
+    fakeAsync((async) {
+      final t = ScriptedTransport()..willOpen();
+      final c = connection(t)..attach('conv_1');
+      unawaited(c.connect());
+      async.flushMicrotasks();
+      c.attach('conv_2', after: 0);
+      c.send(const KletsoPingFrame());
+      async.flushMicrotasks();
+      expect(t.current.sent.last, isA<KletsoPingFrame>());
+      expect(c.queuedFrames, 0);
+      unawaited(c.dispose());
+      async.flushMicrotasks();
+    });
+  });
+
   test(
     'error frames and stream errors are reported, unknown frames ignored',
     () {

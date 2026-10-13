@@ -1,7 +1,7 @@
 name: kletso_core
 description: >-
   Kletso client for Dart and Flutter: sessions, realtime chat with typed surfaces, actions, context, triggers, voice and avatar state. Bring your own model key.
-version: 0.2.4
+version: 0.2.5
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai

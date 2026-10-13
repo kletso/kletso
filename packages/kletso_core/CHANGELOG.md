@@ -1,3 +1,7 @@
+## 0.2.5 — 2026-10-14
+
+- Frames sent right after `attach()`/`startConversation()` are held until the server's `ready` for that conversation; fixes `not attached to a conversation` errors and lost first messages.
+
 ## 0.2.4 — 2026-10-13
 
 - `clock` constraint relaxed to `^1.1.1`. `^1.1.3` (released 2026-08-28) could not be solved on Flutter 3.38 and older, whose `flutter_test` pins `clock 1.1.2`, so any app with `flutter_test` failed version solving. Only `clock.now()` is used. No code changes.
