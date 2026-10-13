@@ -304,6 +304,11 @@ extension KletsoClientUi on KletsoClient {
     KletsoComponentSpec? spec,
   }) => ui.components.register(type, builder, spec: spec);
 
+  /// Registers the placeholder shown for [type] while the agent's surface is
+  /// still streaming (`ui.pending`) or when a `loading` block asks for it.
+  void registerLoader(String type, KletsoLoaderBuilder builder) =>
+      ui.components.registerLoader(type, builder);
+
   /// Registers a handler for a `local` action name.
   void registerAction(String name, KletsoActionHandler handler) =>
       ui.actions.register(name, handler);

@@ -21,6 +21,7 @@ After that, `KletsoChat` shows the mic button whenever the agent has voice enabl
 
 - Audio travels as binary PCM frames on the same `kletso.v1` WebSocket as the chat (`KletsoAudioFrame` from `kletso_ui_schema`).
 - A level meter feeds the avatar lip-sync in `kletso_flutter`.
+- Requires Dart 3.9 / Flutter 3.35 or newer, like the rest of the SDK. The `record_*` constraints accept the 1.x and 2.x lines: pub picks 2.x on Flutter 3.44+ and 1.x below (same API, no difference for you).
 - `KletsoDeviceAudioIo` is the default `KletsoAudioIo`; hosts with their own audio stack implement `KletsoAudioIo` from `package:kletso_core` instead and skip this package.
 
 ## Permissions

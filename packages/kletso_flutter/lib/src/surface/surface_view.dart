@@ -178,6 +178,9 @@ final class _BuildContext implements KletsoBuildContext {
   final Set<String> _ancestors;
 
   @override
+  KletsoComponentRegistry get registry => _r.registry;
+
+  @override
   final BuildContext context;
 
   @override

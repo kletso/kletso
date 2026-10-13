@@ -1,3 +1,9 @@
+## 0.2.1 — 2026-10-09
+
+- Event `ui.pending` (`KletsoUiPending`, `KletsoPendingComponent`): a `render_ui` call is streaming; carries the surface id and the component ids/types seen so far, repeated as more appear. `ui.render` gains `toolCallId` to match it (`KletsoUiRender.toolCallId`).
+- `loading` block: `for` (component type to mimic) and `count` (1–12) props, so a surface can show type-specific placeholders.
+- Fixture `eventsPendingUi`; schemas updated.
+
 ## 0.2.0 — 2026-10-07
 
 - Voice protocol: client frames `voice.start` / `voice.stop` / `voice.commit` / `voice.played` / `voice.text` (`KletsoVoiceStartFrame`, `KletsoVoiceStopFrame`, …, `KletsoVoiceMode`, `KletsoVoiceStopReason`) and binary PCM16 24 kHz audio frames (`KletsoAudioFrame`, kinds `audioIn` 0x01 / `audioOut` 0x02, `decode`, `rms`, `duration`).

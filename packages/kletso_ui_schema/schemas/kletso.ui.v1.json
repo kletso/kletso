@@ -1255,6 +1255,18 @@
         "properties": {
           "label": {
             "$ref": "#/$defs/shortString"
+          },
+          "for": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Component type to mimic: the renderer shows the loader registered for that type (or a generic one) instead of a spinner."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "default": 1,
+            "description": "How many placeholders to show when `for` is set."
           }
         }
       },

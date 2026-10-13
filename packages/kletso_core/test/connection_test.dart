@@ -424,4 +424,40 @@ void main() {
       async.flushMicrotasks();
     });
   });
+
+  test(
+    'a dropped socket reconnects silently: no error, reason on the state',
+    () {
+      fakeAsync((async) {
+        final t = ScriptedTransport()
+          ..willOpen(readySeq: 3)
+          ..willOpen(readySeq: 3);
+        final c = connection(t);
+        final errors = <KletsoException>[];
+        c.errors.listen(errors.add);
+        final seen = <String>[];
+        c.state.addListener(
+          () => seen.add('${c.state.value.name}:${c.stateReason}'),
+        );
+        unawaited(c.connect());
+        async.flushMicrotasks();
+        expect(c.state.value, KletsoConnectionState.open);
+        // Android reports an aborted idle socket as close code 1002.
+        t.current.serverClose(1002, 'reset');
+        async.flushMicrotasks();
+        expect(c.state.value, KletsoConnectionState.reconnecting);
+        expect(c.stateReason, contains('1002'));
+        async.elapse(const Duration(seconds: 2));
+        async.flushMicrotasks();
+        expect(c.state.value, KletsoConnectionState.open);
+        expect(errors, isEmpty, reason: 'a blip is not an error');
+        expect(
+          seen,
+          contains(startsWith('reconnecting:closed: KletsoCloseInfo(1002')),
+        );
+        unawaited(c.dispose());
+        async.flushMicrotasks();
+      });
+    },
+  );
 }

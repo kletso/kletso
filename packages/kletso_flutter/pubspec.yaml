@@ -1,7 +1,7 @@
 name: kletso_flutter
 description: >-
   Flutter widgets for Kletso AI chat: launcher, chat, 30 built-in blocks, custom components, theming, notifications, voice sheet and animated avatar.
-version: 0.2.1
+version: 0.2.3
 repository: https://github.com/kletso/kletso
 issue_tracker: https://github.com/kletso/kletso/issues
 homepage: https://kletso.ai
@@ -15,8 +15,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  kletso_core: ^0.2.0
-  kletso_ui_schema: ^0.2.0
+  kletso_core: ^0.2.3
+  kletso_ui_schema: ^0.2.1
   meta: ^1.16.0
 
 dev_dependencies:

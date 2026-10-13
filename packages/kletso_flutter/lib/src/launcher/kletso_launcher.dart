@@ -58,11 +58,15 @@ final class _KletsoLauncherState extends State<KletsoLauncher> {
   late final KletsoListenable<bool> _typing = _client.agentTyping.asFlutter();
   final KletsoAvatarController _avatar = KletsoAvatarController();
   StreamSubscription<KletsoEvent>? _sub;
+  AppLifecycleListener? _lifecycle;
   bool _unread = false;
 
   @override
   void initState() {
     super.initState();
+    // Close the socket cleanly when the app is backgrounded and reconnect on
+    // return, so the OS never aborts an idle socket underneath the SDK.
+    _lifecycle = _client.bindAppLifecycle();
     _sub = _client.events.listen((e) {
       if (e is KletsoServerEvent &&
           e.type == KletsoEventTypes.messageCompleted &&
@@ -85,6 +89,7 @@ final class _KletsoLauncherState extends State<KletsoLauncher> {
 
   @override
   void dispose() {
+    _lifecycle?.dispose();
     unawaited(_sub?.cancel());
     _typing
       ..removeListener(_onTypingChanged)

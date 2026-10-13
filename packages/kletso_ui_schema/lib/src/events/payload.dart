@@ -51,6 +51,9 @@ abstract final class KletsoEventTypes {
   /// A full `kletso.ui/v1` surface to render.
   static const String uiRender = 'ui.render';
 
+  /// `ui.pending`: a `render_ui` call is streaming; what it will contain so far.
+  static const String uiPending = 'ui.pending';
+
   /// Partial surface update (V2).
   static const String uiPatch = 'ui.patch';
 
@@ -184,7 +187,23 @@ sealed class KletsoEventPayload {
           error: optionalString(d, 'error'),
         );
       case KletsoEventTypes.uiRender:
-        return KletsoUiRender(rawSurface: d['surface']);
+        return KletsoUiRender(
+          rawSurface: d['surface'],
+          toolCallId: optionalString(d, 'toolCallId'),
+        );
+      case KletsoEventTypes.uiPending:
+        return KletsoUiPending(
+          toolCallId: optionalString(d, 'toolCallId') ?? '',
+          surfaceId: optionalString(d, 'surfaceId'),
+          components: <KletsoPendingComponent>[
+            for (final c in optionalList(d, 'components') ?? const <Object?>[])
+              if (c is Map<String, Object?>)
+                KletsoPendingComponent(
+                  id: optionalString(c, 'id') ?? '',
+                  type: optionalString(c, 'type') ?? '',
+                ),
+          ],
+        );
       case KletsoEventTypes.uiPatch:
         return KletsoUiPatch(
           surfaceId: optionalString(d, 'surfaceId') ?? '',
@@ -511,14 +530,55 @@ final class KletsoWorkflowEvent extends KletsoEventPayload {
 /// limits and known-type set via [parse].
 final class KletsoUiRender extends KletsoEventPayload {
   /// Creates the payload.
-  const KletsoUiRender({required this.rawSurface});
+  const KletsoUiRender({required this.rawSurface, this.toolCallId});
 
   /// The decoded surface document.
   final Object? rawSurface;
 
+  /// The `render_ui` call this surface came from, when the runtime streamed
+  /// `ui.pending` events for it first.
+  final String? toolCallId;
+
   /// Validates the surface with the renderer's settings.
   KletsoSurfaceResult parse({Set<String> knownTypes = const <String>{}}) =>
       KletsoSurface.parseJson(rawSurface, knownTypes: knownTypes);
+}
+
+/// One component announced by `ui.pending`: its id and type, so the renderer
+/// can show a type-specific loader before the surface arrives.
+final class KletsoPendingComponent {
+  /// Creates the entry.
+  const KletsoPendingComponent({required this.id, required this.type});
+
+  /// Component id inside the coming surface.
+  final String id;
+
+  /// Component type (built-in or host-registered).
+  final String type;
+
+  @override
+  String toString() => 'KletsoPendingComponent($id: $type)';
+}
+
+/// `ui.pending`: a `render_ui` call is streaming. Carries the surface id and
+/// the component ids/types seen so far, in order; repeated as more appear and
+/// replaced by the `ui.render` with the same [toolCallId].
+final class KletsoUiPending extends KletsoEventPayload {
+  /// Creates the payload.
+  const KletsoUiPending({
+    required this.toolCallId,
+    this.surfaceId,
+    this.components = const <KletsoPendingComponent>[],
+  });
+
+  /// The streaming tool call.
+  final String toolCallId;
+
+  /// The surface id, once it has been read from the stream.
+  final String? surfaceId;
+
+  /// Components seen so far, in document order.
+  final List<KletsoPendingComponent> components;
 }
 
 /// `ui.patch`: partial update of an already rendered surface. `data` is

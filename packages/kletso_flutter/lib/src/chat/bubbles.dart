@@ -3,6 +3,7 @@ import 'package:kletso_core/kletso_core.dart';
 
 import '../avatar/avatar_controller.dart';
 import '../avatar/kletso_avatar.dart';
+import '../blocks/loader_blocks.dart';
 import '../markdown/renderer.dart';
 import '../registry/ui_bindings.dart';
 import '../surface/surface_view.dart';
@@ -127,7 +128,8 @@ final class KletsoBotBubble extends StatelessWidget {
       );
     } else if (streaming &&
         message.toolCalls.isEmpty &&
-        message.surfaces.isEmpty) {
+        message.surfaces.isEmpty &&
+        message.pending.isEmpty) {
       children.add(const KletsoTypingDots());
     }
     if (message.error != null && message.status == KletsoMessageStatus.failed) {
@@ -156,6 +158,18 @@ final class KletsoBotBubble extends StatelessWidget {
           client: client,
           markdownRenderer: markdownRenderer,
           streaming: streaming,
+        ),
+      );
+    }
+    // Loaders for surfaces still streaming (D88), under what has arrived.
+    for (final pending in message.pending) {
+      if (children.isNotEmpty) children.add(const SizedBox(height: 10));
+      children.add(
+        KletsoPendingSurfaceView(
+          key: ValueKey<String>('pending_${pending.toolCallId}'),
+          pending: pending,
+          theme: t,
+          registry: client?.ui.components,
         ),
       );
     }

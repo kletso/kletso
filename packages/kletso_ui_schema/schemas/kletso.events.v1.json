@@ -147,6 +147,22 @@
       "if": {
         "properties": {
           "type": {
+            "const": "ui.pending"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "$ref": "#/$defs/uiPending"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
             "const": "ui.render"
           }
         }
@@ -649,6 +665,10 @@
       "properties": {
         "surface": {
           "$ref": "kletso.ui.v1.json"
+        },
+        "toolCallId": {
+          "type": "string",
+          "description": "The render_ui call this surface came from; matches the ui.pending events that preceded it."
         }
       }
     },
@@ -973,6 +993,46 @@
           "minimum": 0
         }
       }
+    },
+    "uiPending": {
+      "type": "object",
+      "required": [
+        "toolCallId",
+        "components"
+      ],
+      "properties": {
+        "toolCallId": {
+          "type": "string"
+        },
+        "surfaceId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "type": {
+                "type": "string",
+                "maxLength": 64
+              }
+            }
+          }
+        }
+      },
+      "description": "A render_ui call is still streaming: the surface id and the component ids/types seen so far, in order. Repeated as more components appear; replaced by the ui.render with the same toolCallId."
     }
   }
 }

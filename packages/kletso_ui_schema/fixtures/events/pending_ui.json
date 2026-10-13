@@ -1,0 +1,149 @@
+[
+  {
+    "id": "evt_01J8PENDING0001",
+    "seq": 1,
+    "type": "message.created",
+    "ts": "2026-10-09T12:00:01.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8PENDING0001",
+      "role": "assistant",
+      "text": ""
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0002",
+    "seq": 2,
+    "type": "message.delta",
+    "ts": "2026-10-09T12:00:02.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8PENDING0001",
+      "text": "Two events tonight: "
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0003",
+    "seq": 3,
+    "type": "ui.pending",
+    "ts": "2026-10-09T12:00:03.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "toolCallId": "toolu_ui1",
+      "surfaceId": null,
+      "components": []
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0004",
+    "seq": 4,
+    "type": "ui.pending",
+    "ts": "2026-10-09T12:00:04.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "toolCallId": "toolu_ui1",
+      "surfaceId": "sfc_pending01",
+      "components": [
+        {
+          "id": "col",
+          "type": "column"
+        },
+        {
+          "id": "a",
+          "type": "card"
+        }
+      ]
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0005",
+    "seq": 5,
+    "type": "ui.pending",
+    "ts": "2026-10-09T12:00:05.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "toolCallId": "toolu_ui1",
+      "surfaceId": "sfc_pending01",
+      "components": [
+        {
+          "id": "col",
+          "type": "column"
+        },
+        {
+          "id": "a",
+          "type": "card"
+        },
+        {
+          "id": "b",
+          "type": "card"
+        }
+      ]
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0006",
+    "seq": 6,
+    "type": "ui.render",
+    "ts": "2026-10-09T12:00:06.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "toolCallId": "toolu_ui1",
+      "surface": {
+        "schema": "kletso.ui/v1",
+        "surfaceId": "sfc_pending01",
+        "root": "col",
+        "fallbackText": "Two events tonight",
+        "components": {
+          "col": {
+            "type": "column",
+            "props": {
+              "children": [
+                "a",
+                "b"
+              ]
+            }
+          },
+          "a": {
+            "type": "card",
+            "props": {
+              "title": "Jazz night"
+            }
+          },
+          "b": {
+            "type": "card",
+            "props": {
+              "title": "Food market"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "evt_01J8PENDING0007",
+    "seq": 7,
+    "type": "message.completed",
+    "ts": "2026-10-09T12:00:07.000Z",
+    "conversationId": "conv_01J8DEMO000001",
+    "turnId": "trn_01J8TURN000009",
+    "data": {
+      "messageId": "msg_01J8PENDING0001",
+      "text": "Two events tonight: ",
+      "usage": {
+        "in": 10,
+        "out": 5,
+        "cachedIn": 0,
+        "reasoning": 0
+      },
+      "costMicros": 1,
+      "latencyMs": 900,
+      "finishReason": "stop"
+    }
+  }
+]

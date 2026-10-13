@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kletso_core/kletso_core.dart';
 
 import '../avatar/client_avatar.dart';
+import '../launcher/presentation.dart';
 import '../listenable_adapter.dart';
 import '../markdown/plain_renderer.dart';
 import '../markdown/renderer.dart';
@@ -78,10 +79,15 @@ final class _KletsoChatState extends State<KletsoChat> {
   bool _ensuring = false;
   Timer? _typingThrottle;
 
+  AppLifecycleListener? _lifecycle;
+
   @override
   void initState() {
     super.initState();
     _bind(widget.client ?? Kletso.instance);
+    // Same lifecycle handling as the launcher, for hosts that embed the chat
+    // directly: pause the socket in the background, reconnect on return.
+    _lifecycle = _client.bindAppLifecycle();
     _scroll.addListener(_onScroll);
     unawaited(_ensureConversation());
   }
@@ -128,6 +134,7 @@ final class _KletsoChatState extends State<KletsoChat> {
 
   @override
   void dispose() {
+    _lifecycle?.dispose();
     _typingThrottle?.cancel();
     _scroll
       ..removeListener(_onScroll)

@@ -746,7 +746,7 @@ final class KletsoClient implements KletsoVoiceLink {
     if (connection == null || _disposed) return;
     final state = connection.state.value;
     _connectionState.value = state;
-    _events.add(KletsoConnectionChanged(state));
+    _events.add(KletsoConnectionChanged(state, reason: connection.stateReason));
   }
 
   KletsoSession _requireSession() {

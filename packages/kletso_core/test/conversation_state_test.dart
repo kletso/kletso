@@ -345,4 +345,34 @@ void main() {
       expect(state.messages.last.toString(), contains('msg_3'));
     },
   );
+
+  test('ui.pending attaches loaders to the turn, ui.render replaces them', () {
+    final pendingLog = (KletsoFixtures.eventsPendingUi! as List)
+        .map(KletsoEventEnvelope.fromJson)
+        .toList();
+    final state = KletsoConversationState('conv_01J8DEMO000001');
+    for (final e in pendingLog.take(3)) {
+      state.apply(e);
+    }
+    var m = state.messages.single;
+    expect(m.text, 'Two events tonight: ');
+    expect(m.pending.single.components, isEmpty);
+    for (final e in pendingLog.skip(3).take(2)) {
+      state.apply(e);
+    }
+    m = state.messages.single;
+    expect(m.pending, hasLength(1), reason: 'same call, replaced not added');
+    expect(m.pending.single.surfaceId, 'sfc_pending01');
+    expect(m.pending.single.components.map((c) => c.type), [
+      'column',
+      'card',
+      'card',
+    ]);
+    state.apply(pendingLog[5]); // ui.render with the same toolCallId
+    m = state.messages.single;
+    expect(m.surfaces.single.surfaceId, 'sfc_pending01');
+    expect(m.pending, isEmpty);
+    state.apply(pendingLog[6]);
+    expect(state.messages.single.status, KletsoMessageStatus.complete);
+  });
 }

@@ -3,11 +3,44 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:kletso_core/kletso_core.dart';
 
+import '../theme/kletso_theme.dart';
 import 'build_context.dart';
 
 /// Builds the widget for one component node.
 typedef KletsoComponentBuilder =
     Widget Function(KletsoBuildContext ctx, KletsoNode node);
+
+/// Builds the placeholder shown while a component of a type is still
+/// streaming (`ui.pending`) or requested by a `loading` block with `for`.
+typedef KletsoLoaderBuilder = Widget Function(KletsoLoaderContext ctx);
+
+/// What a loader knows: the component type (and id/position when the
+/// runtime announced them) plus the theme.
+final class KletsoLoaderContext {
+  /// Creates the context.
+  const KletsoLoaderContext({
+    required this.context,
+    required this.theme,
+    required this.type,
+    this.id,
+    this.index = 0,
+  });
+
+  /// Flutter build context.
+  final BuildContext context;
+
+  /// Active theme.
+  final KletsoTheme theme;
+
+  /// Component type the loader stands in for (`''` when unknown yet).
+  final String type;
+
+  /// Component id inside the coming surface, when announced.
+  final String? id;
+
+  /// Position among the placeholders of one surface.
+  final int index;
+}
 
 /// Runs a `local` action on the device.
 typedef KletsoActionHandler =
@@ -25,6 +58,8 @@ final class KletsoComponentRegistry {
       <String, KletsoComponentBuilder>{};
   final Map<String, KletsoComponentSpec> _specs =
       <String, KletsoComponentSpec>{};
+  final Map<String, KletsoLoaderBuilder> _loaders =
+      <String, KletsoLoaderBuilder>{};
 
   /// Registers [builder] for [type]; replaces an existing one. Pass [spec]
   /// so the type can be synced to the dashboard.
@@ -49,6 +84,18 @@ final class KletsoComponentRegistry {
 
   /// The builder for [type], if registered.
   KletsoComponentBuilder? builderFor(String type) => _builders[type];
+
+  /// Registers the placeholder shown while a [type] component is still
+  /// streaming; replaces an existing one. Types without a loader get the
+  /// SDK's generic shimmer.
+  void registerLoader(String type, KletsoLoaderBuilder builder) =>
+      _loaders[type] = builder;
+
+  /// Removes the loader for [type].
+  void unregisterLoader(String type) => _loaders.remove(type);
+
+  /// The loader for [type], if registered.
+  KletsoLoaderBuilder? loaderFor(String type) => _loaders[type];
 
   /// Whether [type] is registered.
   bool contains(String type) => _builders.containsKey(type);

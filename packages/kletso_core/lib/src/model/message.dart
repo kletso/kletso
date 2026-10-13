@@ -102,11 +102,13 @@ final class KletsoMessage {
     this.value,
     List<KletsoSurface> surfaces = const <KletsoSurface>[],
     List<KletsoToolCall> toolCalls = const <KletsoToolCall>[],
+    List<KletsoUiPending> pending = const <KletsoUiPending>[],
     this.error,
     this.costMicros,
     this.latencyMs,
   }) : surfaces = List<KletsoSurface>.unmodifiable(surfaces),
-       toolCalls = List<KletsoToolCall>.unmodifiable(toolCalls);
+       toolCalls = List<KletsoToolCall>.unmodifiable(toolCalls),
+       pending = List<KletsoUiPending>.unmodifiable(pending);
 
   /// Message id (`msg_…`), or the `clientId` while pending.
   final String id;
@@ -138,6 +140,11 @@ final class KletsoMessage {
   /// Tool calls made during this turn, in start order.
   final List<KletsoToolCall> toolCalls;
 
+  /// Surfaces still streaming (`ui.pending`): what the agent is about to
+  /// render, so the UI can show loaders. Each entry is replaced by its
+  /// `ui.render` and all are cleared when the message completes.
+  final List<KletsoUiPending> pending;
+
   /// Error when [status] is failed.
   final KletsoErrorEvent? error;
 
@@ -162,6 +169,7 @@ final class KletsoMessage {
     DateTime? createdAt,
     List<KletsoSurface>? surfaces,
     List<KletsoToolCall>? toolCalls,
+    List<KletsoUiPending>? pending,
     KletsoErrorEvent? error,
     int? costMicros,
     int? latencyMs,
@@ -176,6 +184,7 @@ final class KletsoMessage {
     value: value,
     surfaces: surfaces ?? this.surfaces,
     toolCalls: toolCalls ?? this.toolCalls,
+    pending: pending ?? this.pending,
     error: error ?? this.error,
     costMicros: costMicros ?? this.costMicros,
     latencyMs: latencyMs ?? this.latencyMs,

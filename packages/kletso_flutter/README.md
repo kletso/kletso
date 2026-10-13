@@ -100,6 +100,20 @@ Or drive `KletsoAvatar` directly with `moodImages` (any `ImageProvider`,
 including animated GIF/WebP). Pictures change at runtime whenever a new
 bootstrap arrives; nothing to restart.
 
+## Loaders
+
+While the model is still writing a surface the runtime streams `ui.pending`
+(component ids and types seen so far); the chat shows a placeholder per
+component and swaps in the real one on `ui.render`. Give each type the right
+shape:
+
+```dart
+Kletso.instance.registerLoader('product_card', (ctx) => const ProductCardSkeleton());
+```
+
+Types without a loader get the SDK's shimmer. A `loading` block with
+`for`/`count` uses the same loaders from JSON.
+
 ## Every interaction direction
 
 | direction | how |

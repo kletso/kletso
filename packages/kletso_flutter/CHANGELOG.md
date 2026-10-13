@@ -1,3 +1,14 @@
+## 0.2.3 — 2026-10-09
+
+- Component loaders: `registry.registerLoader(type, builder)` / `client.registerLoader` (`KletsoLoaderBuilder`, `KletsoLoaderContext`), a generic `KletsoShimmer`, and `KletsoPendingSurfaceView`. The bot bubble shows a loader per announced component while the agent's surface streams (`ui.pending`) and swaps in the real surface on `ui.render`; text already streamed stays above.
+- `loading` block honours `for` and `count`: the registered loader for that type (or the shimmer), `count` times.
+- `KletsoBuildContext.registry` exposes the registry in use to block builders.
+
+## 0.2.2 — 2026-10-09
+
+- `KletsoLauncher` and `KletsoChat` bind the app lifecycle themselves: the socket is closed cleanly when the app goes to the background and reconnected (with replay) on return. Hosts no longer need to call `bindAppLifecycle()`; calling it as well is harmless.
+- Requires `kletso_core` 0.2.2 for the quieter reconnect.
+
 ## 0.2.1 — 2026-10-07
 
 - Shorter pubspec description (pub.dev conventions). No code changes.

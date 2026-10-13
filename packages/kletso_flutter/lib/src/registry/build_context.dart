@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:kletso_core/kletso_core.dart';
 
 import '../theme/kletso_theme.dart';
+import 'registry.dart';
 import 'url_policy.dart';
 
 /// What a component builder gets besides its node: the Flutter context, the
@@ -14,6 +15,9 @@ abstract interface class KletsoBuildContext {
 
   /// The theme in scope.
   KletsoTheme get theme;
+
+  /// The component registry in use (host builders and loaders).
+  KletsoComponentRegistry get registry;
 
   /// The surface being rendered.
   KletsoSurface get surface;

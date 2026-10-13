@@ -23,6 +23,8 @@ export 'src/avatar/kletso_avatar.dart' show KletsoAvatar, KletsoAvatarStyle;
 export 'src/avatar/kletso_avatar_face.g.dart' show KletsoAvatarFaceData;
 export 'src/blocks/chart_block.dart'
     show KletsoChartPainter, KletsoChartPoint, KletsoChartSeries;
+export 'src/blocks/loader_blocks.dart'
+    show KletsoPendingSurfaceView, KletsoShimmer, kletsoLoader;
 export 'src/blocks/media_blocks.dart'
     show KletsoFormat, KletsoMapMarker, KletsoWaveformPainter;
 export 'src/blocks/structure_blocks.dart' show KletsoCountdown;
@@ -64,7 +66,9 @@ export 'src/registry/registry.dart'
         KletsoActionHandler,
         KletsoActionRegistry,
         KletsoComponentBuilder,
-        KletsoComponentRegistry;
+        KletsoComponentRegistry,
+        KletsoLoaderBuilder,
+        KletsoLoaderContext;
 export 'src/registry/ui_bindings.dart'
     show
         KletsoClientUi,

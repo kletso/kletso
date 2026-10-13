@@ -107,6 +107,31 @@ void main() {
       }
     });
 
+    test('pending_ui events are valid (ui.pending, ui.render.toolCallId)', () {
+      final log = KletsoFixtures.eventsPendingUi! as List;
+      for (final e in log) {
+        final r = events.validate(e);
+        expect(
+          r.isValid,
+          isTrue,
+          reason: '${(e as Map)['seq']}: ${r.errors.join('\n')}',
+        );
+      }
+      final pending = KletsoEventEnvelope.fromJson(
+        log[4] as Map<String, Object?>,
+      ).payload;
+      expect(pending, isA<KletsoUiPending>());
+      expect((pending as KletsoUiPending).components.map((c) => c.type), [
+        'column',
+        'card',
+        'card',
+      ]);
+      final render = KletsoEventEnvelope.fromJson(
+        log[5] as Map<String, Object?>,
+      ).payload;
+      expect((render as KletsoUiRender).toolCallId, 'toolu_ui1');
+    });
+
     test('voice_turn events are valid', () {
       final log = KletsoFixtures.eventsVoiceTurn! as List;
       for (final e in log) {

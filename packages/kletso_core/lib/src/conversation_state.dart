@@ -120,6 +120,7 @@ final class KletsoConversationState {
             status: KletsoMessageStatus.complete,
             costMicros: costMicros,
             latencyMs: latencyMs,
+            pending: const <KletsoUiPending>[],
           ),
         );
       case KletsoToolStarted(:final toolCallId, :final name, :final args):
@@ -176,7 +177,23 @@ final class KletsoConversationState {
             error: errorMessage,
           ),
         );
-      case KletsoUiRender(:final rawSurface):
+      case KletsoUiPending(:final toolCallId):
+        // Loaders: attach to the turn's assistant message, replacing an
+        // earlier announcement of the same call (components only grow).
+        final target = _lastAssistantByTurn[turnId];
+        if (target == null) return false;
+        final payload = e.payload as KletsoUiPending;
+        return _update(target, (m) {
+          final idx = m.pending.indexWhere((p) => p.toolCallId == toolCallId);
+          final next = List<KletsoUiPending>.of(m.pending);
+          if (idx == -1) {
+            next.add(payload);
+          } else {
+            next[idx] = payload;
+          }
+          return m.copyWith(pending: next);
+        });
+      case KletsoUiRender(:final rawSurface, :final toolCallId):
         final parsed = KletsoSurface.parseJson(rawSurface);
         if (parsed is! KletsoSurfaceOk) {
           // Rejected surfaces become a plain assistant line with the fallback.
@@ -199,6 +216,11 @@ final class KletsoConversationState {
             target,
             (m) => m.copyWith(
               surfaces: <KletsoSurface>[...m.surfaces, parsed.surface],
+              pending: _withoutPending(
+                m.pending,
+                toolCallId,
+                parsed.surface.surfaceId,
+              ),
             ),
           );
         }
@@ -300,5 +322,21 @@ final class KletsoConversationState {
       }
     }
     return _addToolCall(turnId, create());
+  }
+
+  /// Drops the loader a rendered surface replaces: same tool call, else same
+  /// surface id, else the oldest one (a render without ids still ends a wait).
+  static List<KletsoUiPending> _withoutPending(
+    List<KletsoUiPending> pending,
+    String? toolCallId,
+    String surfaceId,
+  ) {
+    if (pending.isEmpty) return pending;
+    var idx = toolCallId == null
+        ? -1
+        : pending.indexWhere((p) => p.toolCallId == toolCallId);
+    if (idx == -1) idx = pending.indexWhere((p) => p.surfaceId == surfaceId);
+    if (idx == -1) idx = 0;
+    return <KletsoUiPending>[...pending]..removeAt(idx);
   }
 }

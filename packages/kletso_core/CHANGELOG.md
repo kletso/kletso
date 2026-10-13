@@ -1,3 +1,16 @@
+## 0.2.4 — 2026-10-13
+
+- `clock` constraint relaxed to `^1.1.1`. `^1.1.3` (released 2026-08-28) could not be solved on Flutter 3.38 and older, whose `flutter_test` pins `clock 1.1.2`, so any app with `flutter_test` failed version solving. Only `clock.now()` is used. No code changes.
+
+## 0.2.3 — 2026-10-09
+
+- `KletsoMessage.pending`: loaders for surfaces still streaming (`ui.pending`), replaced by the matching `ui.render` (same tool call, else same surface id, else the oldest) and cleared on `message.completed`.
+
+## 0.2.2 — 2026-10-09
+
+- A dropped socket no longer surfaces as a `KletsoNetworkException("connection lost …")` error event; the loop reconnects and replays from the last `seq` as before, and hosts see `KletsoConnectionChanged(reconnecting → open)`. Errors are still reported when the reconnect itself fails. (On Android, dart:io reports any socket-level failure, such as the OS aborting an idle socket after backgrounding, as close code 1002.)
+- `KletsoConnectionChanged.reason` and `KletsoConnection.stateReason` carry the close info or error behind a state change.
+
 ## 0.2.1 — 2026-10-07
 
 - Shorter pubspec description (pub.dev conventions). No code changes.

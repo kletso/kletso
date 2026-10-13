@@ -81,6 +81,11 @@ final class KletsoConnection {
   /// Current state.
   KletsoValueListenable<KletsoConnectionState> get state => _state;
 
+  /// Why the state last changed (close info, attempt number, error message),
+  /// when known. Read it from a `state` listener.
+  String? get stateReason => _stateReason;
+  String? _stateReason;
+
   /// Deduplicated envelopes in `seq` order.
   Stream<KletsoEventEnvelope> get events => _events.stream;
 
@@ -303,9 +308,12 @@ final class KletsoConnection {
           attempt = 1;
           continue;
         default:
-          _errors.add(
-            KletsoNetworkException('connection lost ($info)', cause: info),
-          );
+          // A dropped socket is not an error yet: the loop reconnects and
+          // replays from `_lastSeq`. Hosts see `reconnecting` (with the close
+          // info as reason) and then `open`; an error is only reported when
+          // the reconnect itself fails. On Android, dart:io reports any
+          // socket-level failure (reset, abort after backgrounding) as close
+          // code 1002, which used to surface as "connection lost".
           attempt = max(attempt, 1);
           if (!await _sleep(_backoff.next())) return;
       }
@@ -491,6 +499,7 @@ final class KletsoConnection {
         '${reason == null ? '' : ' ($reason)'}',
       );
     }
+    _stateReason = reason;
     _state.value = next;
   }
 

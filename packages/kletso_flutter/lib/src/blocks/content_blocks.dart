@@ -4,6 +4,7 @@ import 'package:kletso_core/kletso_core.dart';
 import '../markdown/renderer.dart';
 import '../registry/build_context.dart';
 import '../surface/surface_view.dart';
+import 'loader_blocks.dart';
 import 'support.dart';
 
 /// `text`: plain text with a style role and colour role.
@@ -339,6 +340,28 @@ Widget buildTableBlock(KletsoBuildContext ctx, KletsoNode node) {
 /// `loading`: spinner with optional label.
 Widget buildLoadingBlock(KletsoBuildContext ctx, KletsoNode node) {
   final t = ctx.theme;
+  final forType = node.string('for');
+  if (forType.isNotEmpty) {
+    // Placeholders for a component type (D88): the host's loader for that
+    // type, else the generic shimmer, `count` times.
+    final count = ((node.props['count'] as num?)?.toInt() ?? 1).clamp(1, 12);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        for (var i = 0; i < count; i++) ...<Widget>[
+          if (i > 0) const SizedBox(height: 8),
+          kletsoLoader(
+            ctx.context,
+            theme: t,
+            type: forType,
+            index: i,
+            registry: ctx.registry,
+          ),
+        ],
+      ],
+    );
+  }
   return Row(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
